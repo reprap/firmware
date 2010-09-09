@@ -608,7 +608,7 @@ void process_string(char instruction[], int size)
 
 			//custom code for returning zero-hit coordinates
 			case 117:
-                                talkToHost.setCoords(from_steps(cdda[0]->returnUnits(), zeroHit));
+                                talkToHost.setCoords(zeroHit);
 				break;
 
 // The valve (real, or virtual...) is now the way to control any extruder (such as

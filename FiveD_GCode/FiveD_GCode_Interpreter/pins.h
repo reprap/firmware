@@ -155,6 +155,14 @@
 #error Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu.
 #endif
 
+#ifdef ADRIAN_POLOLU_STRIPBOARD
+
+/*
+  Pin definitions for the Pololu stripboard design here:
+  
+  http://reprap.org/wiki/Pololu_Electronics#Making_the_electronics_using_stripboard
+*/
+
 #define DEBUG_PIN        13
 
 #define X_STEP_PIN (byte)48
@@ -195,6 +203,61 @@
 #define EXTRUDER_1_HEATER_PIN (byte)13
 #define EXTRUDER_1_TEMPERATURE_PIN (byte)2 
 
+#endif
+
+#ifdef ADRIAN_POLOLU_PCB
+
+/*
+  Pin definitions for the Pololu PCB design here:
+  
+  http://reprap.org/wiki/Pololu_Electronics#Simple_PCBs
+*/
+
+#define DEBUG_PIN        13
+
+#define X_STEP_PIN (byte)51
+#define X_DIR_PIN (byte)53
+#define X_MIN_PIN (byte)47
+#define X_MAX_PIN (byte)-1
+#define X_ENABLE_PIN (byte)49
+
+#define Y_STEP_PIN (byte)43
+#define Y_DIR_PIN (byte)45
+#define Y_MIN_PIN (byte)39
+#define Y_MAX_PIN (byte)-1
+#define Y_ENABLE_PIN (byte)41
+
+#define Z_STEP_PIN (byte)42
+#define Z_DIR_PIN (byte)44
+#define Z_MIN_PIN (byte)38
+#define Z_MAX_PIN (byte)-1
+#define Z_ENABLE_PIN (byte)40
+
+// Heated bed
+
+#define BED_HEATER_PIN (byte)3
+#define BED_TEMPERATURE_PIN (byte)1 
+
+
+//extruder pins
+
+#define EXTRUDER_0_STEP_PIN (byte)48
+#define EXTRUDER_0_DIR_PIN (byte)50
+#define EXTRUDER_0_ENABLE_PIN (byte)46
+#define EXTRUDER_0_HEATER_PIN (byte)2
+#define EXTRUDER_0_TEMPERATURE_PIN (byte)0 
+
+#define EXTRUDER_1_STEP_PIN (byte)4
+#define EXTRUDER_1_DIR_PIN (byte)5
+#define EXTRUDER_1_ENABLE_PIN (byte)6
+#define EXTRUDER_1_HEATER_PIN (byte)13
+#define EXTRUDER_1_TEMPERATURE_PIN (byte)2 
+
+#endif
+
+#ifdef ULTIMACHINE_PCB
+// Johnny's pin defs in here...
+#endif
 
 #else
 
