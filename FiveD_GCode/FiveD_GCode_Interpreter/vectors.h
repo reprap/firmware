@@ -6,6 +6,8 @@
 
 #define round(x) ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 
+struct LongPoint;
+
 // Real-world units
 struct FloatPoint
 {
@@ -14,7 +16,19 @@ struct FloatPoint
 	float z;
         float e;   // Extrude length
         float f;   // Feedrate
+        FloatPoint();
+        FloatPoint(const LongPoint& a);
 };
+
+inline FloatPoint::FloatPoint()
+{
+  x = 0;
+  y = 0;
+  z = 0;
+  e = 0;
+  f = 0;
+}  
+
 
 inline FloatPoint operator+(const FloatPoint& a, const FloatPoint& b)
 {
@@ -126,5 +140,25 @@ inline LongPoint to_steps(const FloatPoint& units, const FloatPoint& position)
 {
         return roundv(units*position);
 }
+
+inline FloatPoint from_steps(const FloatPoint& units, const LongPoint& position)
+{
+        FloatPoint inv = units;
+        inv.x = 1.0/inv.x;
+        inv.y = 1.0/inv.y;
+        inv.z = 1.0/inv.z;
+        inv.e = 1.0/inv.e;
+        inv.f = 1.0/inv.f;
+        return roundv(inv*position);
+}
+
+inline FloatPoint::FloatPoint(const LongPoint& a)
+{
+  x = a.x;
+  y = a.y;
+  z = a.z;
+  e = a.e;
+  f = a.f;
+}  
 
 #endif

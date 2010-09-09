@@ -113,6 +113,8 @@ public:
   void set_units();
   bool get_units();
   
+  FloatPoint returnUnits();
+  
   // Kill - stop all activity and turn off steppers
   
   void shutdown();
@@ -121,6 +123,10 @@ public:
 
 // Short functions inline to save memory; particularly useful in the Arduino
 
+inline FloatPoint cartesian_dda::returnUnits()
+{
+  return units;
+}
 
 inline bool cartesian_dda::get_units()
 {
@@ -185,10 +191,16 @@ inline bool cartesian_dda::xCanStep(long current, long target, bool dir)
 #if ENDSTOPS_MIN_ENABLED == 1
 #if X_ENDSTOP_INVERTING
 	if(!dir && !digitalRead(X_MIN_PIN) )
+        {
+                zeroHit.x = current;
 		return false;
+        }
 #else
 	if(!dir && digitalRead(X_MIN_PIN) )
+        {
+                zeroHit.x = current;
 		return false;
+        }
 #endif
 #endif
 
@@ -221,10 +233,16 @@ inline bool cartesian_dda::yCanStep(long current, long target, bool dir)
 #if ENDSTOPS_MIN_ENABLED == 1
 #if Y_ENDSTOP_INVERTING
 	if(!dir && !digitalRead(Y_MIN_PIN) )
+        {
+                zeroHit.y = current;
 		return false;
+        }
 #else
 	if(!dir && digitalRead(Y_MIN_PIN) )
+        {
+                zeroHit.y = current;
 		return false;
+        }
 #endif
 #endif
 
@@ -257,10 +275,16 @@ inline bool cartesian_dda::zCanStep(long current, long target, bool dir)
 #if ENDSTOPS_MIN_ENABLED == 1
 #if Z_ENDSTOP_INVERTING
 	if(!dir && !digitalRead(Z_MIN_PIN) )
+        {
+                zeroHit.z = current;
 		return false;
+        }
 #else
 	if(!dir && digitalRead(Z_MIN_PIN) )
+        {
+                zeroHit.z = current;
 		return false;
+        }
 #endif
 #endif
 

@@ -117,6 +117,10 @@ word interruptBlink;
 
 FloatPoint where_i_am;
 
+// The coordinates of the last zero positions
+
+LongPoint zeroHit;
+
 // Our interrupt function
 
 /*

@@ -96,7 +96,7 @@
 
 // Comment out the next line if you are running a Darwin with a MOTHERBOARD > 1
 
-#define MENDEL 1
+//#define MENDEL 1
 
 // Set to 1 if enable pins are inverting
 // For RepRap stepper boards version 1.x the enable pins are *not* inverting.
@@ -149,7 +149,7 @@
 
 #if MOTHERBOARD == 3
 
-#define MENDEL 1
+//#define MENDEL 1
 
 // Comment out this if you are using a thermocouple
 #define USE_THERMISTOR
@@ -321,6 +321,8 @@ inline void resetTimer()
 {
   TCNT2 = 0;
 }
+
+extern LongPoint zeroHit;
 
 #endif
 

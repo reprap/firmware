@@ -595,11 +595,21 @@ void process_string(char instruction[], int size)
                                 talkToHost.setCoords(where_i_am);
 				break;
 
+			//Reserved for return version number
+			case 115:
+                                //talkToHost.sendVersion();
+				break;
+
 
                         // TODO: make this work properly
                         case 116:
                              ex[extruder_in_use]->waitForTemperature();
-				break;   
+				break; 
+
+			//custom code for returning zero-hit coordinates
+			case 117:
+                                talkToHost.setCoords(from_steps(cdda[0]->returnUnits(), zeroHit));
+				break;
 
 // The valve (real, or virtual...) is now the way to control any extruder (such as
 // a pressurised paste extruder) that cannot move using E codes.
