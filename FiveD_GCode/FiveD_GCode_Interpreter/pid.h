@@ -19,6 +19,7 @@ private:
   float pGain;
   float iGain;
   float dGain;
+  float band;
   byte heat_pin, temp_pin;
   int currentTemperature, targetTemperature;
  

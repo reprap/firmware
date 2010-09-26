@@ -15,11 +15,13 @@ PIDcontrol::PIDcontrol(byte hp, byte tp, bool b)
      pGain = B_TEMP_PID_PGAIN;
      iGain = B_TEMP_PID_IGAIN;
      dGain = B_TEMP_PID_DGAIN;
+     band = B_TEMP_PID_BAND;
    } else
    {
      pGain = E_TEMP_PID_PGAIN;
      iGain = E_TEMP_PID_IGAIN;
      dGain = E_TEMP_PID_DGAIN;
+     band = E_TEMP_PID_BAND;
    }   
    currentTemperature = 0;
    setTarget(0);
@@ -130,20 +132,36 @@ void PIDcontrol::pidCalculation()
     internalTemperature(bedtemptable);
   else
     internalTemperature(temptable);
-  time = millis();
-  float dt = 0.001*(float)(time - previousTime);
-  previousTime = time;
-  if (dt <= 0) // Don't do it when millis() has rolled over
-    return;
-    
+  
   float error = (float)(targetTemperature - currentTemperature);
-  integral += error*dt;
-  float derivative = (error - previousError)/dt;
-  previousError = error;
-  int output = (int)(error*pGain + integral*iGain + derivative*dGain);
-  if(!doingBed && cdda[tail]->extruding())
-    output += EXTRUDING_INCREASE;
-  output = constrain(output, 0, 255);
+  int output;
+  if(error < -band)
+  {
+    output = 0;
+    setTarget(targetTemperature);
+  } else if (error > band)
+  {
+    output = 255;
+    setTarget(targetTemperature);    
+  } else
+  {
+    // PID
+    time = millis();
+    float dt = 0.001*(float)(time - previousTime);
+    previousTime = time;
+    if (dt <= 0) // Don't do it when millis() has rolled over
+      return;
+    
+  
+    integral += error*dt;
+    float derivative = (error - previousError)/dt;
+    previousError = error;
+    output = (int)(error*pGain + integral*iGain + derivative*dGain);
+    if(!doingBed && cdda[tail]->extruding())
+      output += EXTRUDING_INCREASE;
+    output = constrain(output, 0, 255);
+  }
+  
   analogWrite(heat_pin, output);
 }
 

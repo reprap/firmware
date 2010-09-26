@@ -149,7 +149,12 @@
 
 #if MOTHERBOARD == 3
 
-//#define MENDEL 1
+// Uncomment one of the following, depending on which board your electronics
+// use.  See pins.h, http://reprap.org/wiki/Pololu_Electronics and
+// http://reprap.org/wiki/Arduino_Mega_Pololu_Shield
+//#define ADRIAN_POLOLU_STRIPBOARD
+#define ADRIAN_POLOLU_PCB
+//#define ULTIMACHINE_PCB 
 
 // Comment out this if you are using a thermocouple
 #define USE_THERMISTOR
@@ -171,15 +176,20 @@
 
 // Axis scaling in stepper-motor steps per mm of movement
 
+// The second set of commented out values are for the new 13-tooth pulley: pulley_7_9-5_13_7
+
 #define X_STEPS_PER_MM   80.376
+//#define X_STEPS_PER_MM   49.462
 #define X_STEPS_PER_INCH (X_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_X_DIR 0
 
 #define Y_STEPS_PER_MM   80.376
+//#define X_STEPS_PER_MM   49.462
 #define Y_STEPS_PER_INCH (Y_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_Y_DIR 0
 
 #define Z_STEPS_PER_MM   6667.184
+//#define Z_STEPS_PER_MM   4102.882
 #define Z_STEPS_PER_INCH (Z_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_Z_DIR 1
 
@@ -189,8 +199,8 @@
 // E1 for extruder 1, and so on.
 
 //#define E_STEPS_PER_MM   0.9      // NEMA 17 extruder 5mm diameter drive - empirically adjusted
-#define E0_STEPS_PER_MM   17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
-#define E1_STEPS_PER_MM   17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
+#define E0_STEPS_PER_MM   15.25//17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
+#define E1_STEPS_PER_MM   15.25//17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
 
 // The temperature routines get called each time the main loop
 // has gone round this many times
@@ -203,7 +213,7 @@
 
 // The speed at which to talk with the host computer; default is 19200
 
-#define HOST_BAUD 19200 // *RO
+#define HOST_BAUD 57600 // *RO
 
 // Set 1s where you have endstops; 0s where you don't
 // Both Darwin and Mendel have MIN endstops, but not MAX ones.
@@ -252,24 +262,28 @@
 // The number of 5-second intervals to wait at the target temperature for things to stabilise.
 // Too short, and the extruder will jam as only part of it will be hot enough.
 // Too long and the melt will extend too far up the insulating tube.
-// Default value: 10
+// Default value: 3; Use bigger values for lower thermal mass extruders.
 
-#define WAIT_AT_TEMPERATURE 10
+#define WAIT_AT_TEMPERATURE 3
 
 // PID gains.  E_ = extruder, B_ = bed.  The Es are about right for a brass extruder about 8 mm 
 // in diameter and 30 mm long heated by a 6 ohm coil with a 12v supply.  The B_ values are OK
 // for the bed described here:  http://reprap.org/wiki/Mendel_heated_bed
 // Extruding increase biases the input to the extruder heater when the extruder
 // is running as it requires more power.
+// +/- BAND is the proportional band.  Setting this to 0 gives bang-bang control; setting
+// it very large gives full PID all the way.
 
-#define E_TEMP_PID_PGAIN 2
+#define E_TEMP_PID_PGAIN 2.0
 #define E_TEMP_PID_IGAIN 0.15
 #define E_TEMP_PID_DGAIN 0.5
 #define EXTRUDING_INCREASE 7
+#define E_TEMP_PID_BAND 0.0
 
-#define B_TEMP_PID_PGAIN 2
+#define B_TEMP_PID_PGAIN 2.0
 #define B_TEMP_PID_IGAIN 0.07
-#define B_TEMP_PID_DGAIN 1
+#define B_TEMP_PID_DGAIN 1.0
+#define B_TEMP_PID_BAND 1000.0
 
 //our command string length
 
