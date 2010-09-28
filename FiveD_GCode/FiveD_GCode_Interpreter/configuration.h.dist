@@ -176,19 +176,25 @@
 
 // Axis scaling in stepper-motor steps per mm of movement
 
-// The second set of commented out values are for the new 13-tooth pulley: pulley_7_9-5_13_7
+// The first set of values are for the original 8-toothed pulleys
+// The second set of commented out values are for the new 9-tooth pulley: set-screw-drive-pulley_4_6-5_9_7_3off
+// The third set of commented out values are for the 13-tooted pulleys set-screw-drive-pulley_7_9-5_13_7-3off.stl
+// See mendel/mechanics/solid-models/cartesian-robot-m4/printed-parts/alternative-parts/readme
 
 #define X_STEPS_PER_MM   80.376
+//#define X_STEPS_PER_MM   71.445
 //#define X_STEPS_PER_MM   49.462
 #define X_STEPS_PER_INCH (X_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_X_DIR 0
 
 #define Y_STEPS_PER_MM   80.376
-//#define X_STEPS_PER_MM   49.462
+//#define Y_STEPS_PER_MM   71.445
+//#define Y_STEPS_PER_MM   49.462
 #define Y_STEPS_PER_INCH (Y_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_Y_DIR 0
 
 #define Z_STEPS_PER_MM   6667.184
+//#define Z_STEPS_PER_MM   5926.386
 //#define Z_STEPS_PER_MM   4102.882
 #define Z_STEPS_PER_INCH (Z_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_Z_DIR 1
