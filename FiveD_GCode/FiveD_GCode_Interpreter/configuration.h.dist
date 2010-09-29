@@ -60,6 +60,7 @@
 #define Y_ENDSTOP_INVERTING false
 #define Z_ENDSTOP_INVERTING false
 
+
 #define X_STEPS_PER_MM   7.99735
 #define X_STEPS_PER_INCH (X_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_X_DIR 0
@@ -119,15 +120,22 @@
 
 // Axis scaling in stepper-motor steps per mm of movement
 
+// The steps/mm figures are for the original Mendel 8-toothed belt pulley
+// The commented out ones are for the newer 9-tooth pulley: set-screw-drive-pulley_4_6-5_9_7_3off
+// See mendel/mechanics/solid-models/cartesian-robot-m4/printed-parts/alternative-parts/readme
+
 #define X_STEPS_PER_MM   10.047
+//#define X_STEPS_PER_MM   8.9307
 #define X_STEPS_PER_INCH (X_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_X_DIR 0
 
 #define Y_STEPS_PER_MM   10.047
+//#define Y_STEPS_PER_MM   8.9307
 #define Y_STEPS_PER_INCH (Y_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_Y_DIR 0
 
 #define Z_STEPS_PER_MM   833.398
+//#define Z_STEPS_PER_MM   740.798
 #define Z_STEPS_PER_INCH (Z_STEPS_PER_MM*INCHES_TO_MM) // *RO
 #define INVERT_Z_DIR 0
 
@@ -217,7 +225,7 @@
 
 //**********************************************************************************************
 
-// The speed at which to talk with the host computer; default is 19200
+// The speed at which to talk with the host computer; default is 57600
 
 #define HOST_BAUD 57600 // *RO
 
