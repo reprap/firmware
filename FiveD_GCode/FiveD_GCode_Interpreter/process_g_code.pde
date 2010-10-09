@@ -239,7 +239,7 @@ void get_and_do_command()
 
 
 
-int parse_string(struct GcodeParser * gc, char instruction[ ], int size)
+void parse_string(struct GcodeParser * gc, char instruction[ ], int size)
 {
 	int ind;
 	int len;	/* length of parameter argument */
@@ -309,7 +309,7 @@ void process_string(char instruction[], int size)
               if(gc.seen & GCODE_CHECKSUM)
                 sprintf(talkToHost.string(), "Serial Error: checksum without line number. Checksum: %d, line received: %s", gc.Checksum, instruction);
               else
-                sprintf(talkToHost.string(), "Serial Error: line number without checksum. Linenumber: %d, line received: %s", gc.N, instruction);
+                sprintf(talkToHost.string(), "Serial Error: line number without checksum. Linenumber: %ld, line received: %s", gc.N, instruction);
            }
            talkToHost.setResend(gc.LastLineNrRecieved+1);
            return;
@@ -335,7 +335,7 @@ void process_string(char instruction[], int size)
             if(gc.N != gc.LastLineNrRecieved+1)
             {
                 if(SendDebug & DEBUG_ERRORS)
-                  sprintf(talkToHost.string(), "Serial Error: Linenumber (%d) is not last + 1 (%d), line received: %s", gc.N, gc.LastLineNrRecieved+1, instruction);
+                  sprintf(talkToHost.string(), "Serial Error: Linenumber (%ld) is not last + 1 (%ld), line received: %s", gc.N, gc.LastLineNrRecieved+1, instruction);
                 talkToHost.setResend(gc.LastLineNrRecieved+1);
                 return;
             }
