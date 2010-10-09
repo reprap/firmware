@@ -14,6 +14,23 @@
 #include "extruder.h"
 #include "cartesian_dda.h"
 
+void blink();
+void dQMove();
+void setupTimerInterrupt();
+void setTimer(long delay);
+void setTimerResolution(byte r);
+
+void setupGcodeProcessor();
+void init_process_string();
+void cancelAndClearQueue();
+void get_and_do_command();
+
+void process_string(char instruction[], int size);
+
+int scan_int(char *str, int *valp, unsigned int *seen, unsigned int flag);
+int scan_float(char *str, float *valp, unsigned int *seen, unsigned int flag);
+int scan_long(char *str, long *valp, unsigned int *seen, unsigned int flag);
+
 /**
 
 RepRap GCode interpreter.
