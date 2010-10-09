@@ -40,8 +40,8 @@
 TARGET = $(notdir $(CURDIR))
 INSTALL_DIR = /usr/share/arduino
 PORT = /dev/ttyUSB0
-UPLOAD_RATE = 19200
-AVRDUDE_PROGRAMMER = stk500v1
+UPLOAD_RATE = 57600
+AVRDUDE_PROGRAMMER = arduino
 MCU = atmega1280
 F_CPU = 16000000
 CORE = Sanguino
@@ -51,7 +51,7 @@ CORE = Sanguino
 
 ARDUINO = $(INSTALL_DIR)/hardware/$(CORE)/cores/arduino
 AVR_TOOLS_PATH = /usr/bin
-AVRDUDE_PATH = $(INSTALL_DIR)/hardware/tools
+AVRDUDE_PATH = /usr/bin
 SRC =  $(ARDUINO)/pins_arduino.c $(ARDUINO)/wiring.c \
 $(ARDUINO)/wiring_analog.c $(ARDUINO)/wiring_digital.c \
 $(ARDUINO)/wiring_pulse.c $(ARDUINO)/wiring_serial.c \
@@ -99,9 +99,10 @@ LDFLAGS = -lm
 # Programming support using avrdude. Settings and variables.
 AVRDUDE_PORT = $(PORT)
 AVRDUDE_WRITE_FLASH = -U flash:w:applet/$(TARGET).hex
-AVRDUDE_FLAGS = -V -F -C $(AVRDUDE_PATH)/avrdude.conf \
+AVRDUDE_FLAGS = -C /etc/avrdude.conf \
 -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
--b $(UPLOAD_RATE)
+-b $(UPLOAD_RATE) \
+-D -v
 
 # Program settings
 CC = $(AVR_TOOLS_PATH)/avr-gcc
@@ -154,7 +155,7 @@ sym: applet/$(TARGET).sym
 
 # Program the device.
 upload: applet/$(TARGET).hex
-	pulsedtr.py $(PORT)
+	#pulsedtr.py $(PORT)
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)
 
 
