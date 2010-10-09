@@ -63,10 +63,10 @@ public:
 // Wrappers for the comms interface
 
   void putInit();
-  void put(char* s);
+  void put(const char* s);
   void put(const float& f);
   void put(const long& l);
-  void put(int i);
+  void put(const int i);
   void putEnd();
   byte gotData();
   char get();
@@ -95,10 +95,10 @@ inline hostcom::hostcom()
 // Wrappers for the comms interface
 
 inline void hostcom::putInit() {  Serial.begin(HOST_BAUD); }
-inline void hostcom::put(char* s) { Serial.print(s); }
+inline void hostcom::put(const char* s) { Serial.print(s); }
 inline void hostcom::put(const float& f) { Serial.print(f); }
 inline void hostcom::put(const long& l) { Serial.print(l); }
-inline void hostcom::put(int i) { Serial.print(i); }
+inline void hostcom::put(const int i) { Serial.print(i); }
 inline void hostcom::putEnd() { Serial.println(); }
 inline byte hostcom::gotData() { return Serial.available(); }
 inline char hostcom::get() { return Serial.read(); }
