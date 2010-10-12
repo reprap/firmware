@@ -23,6 +23,15 @@
 
 #define MOTHERBOARD 2
 
+// definitions for M115 machine capabilities command, see http://reprap.org/wiki/M115_Keywords
+#define xstr(s) str(s)
+#define str(s) #s
+#define PROTOCOL_VERSION "0.1"	// Make sure you really are compliant with what you advertize here
+#define FIRMWARE_NAME "FiveD"	// Please change this name if you fork the codebase
+#define FIRMWARE_URL "http%3A//reprap.org"	// Escape any colons as %3A
+#define MACHINE_TYPE "Mendel"	// Set to whatever bot you have, could be Darwin, Huxley, or Custom, etc.
+//#define FIRMWARE_VERSION "20101013"	// Need to autoupdate this from svn or git.  FIXME.
+
 // The width of Henry VIII's thumb (or something).
 
 #define INCHES_TO_MM 25.4 // *RO

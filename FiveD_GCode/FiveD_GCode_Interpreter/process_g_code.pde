@@ -595,9 +595,26 @@ void process_string(char instruction[], int size)
                                 talkToHost.setCoords(where_i_am);
 				break;
 
-			//Reserved for return version number
+			//Reserved for returning machine capabilities in keyword:value pairs
 			case 115:
-                                //talkToHost.sendVersion();
+#if defined(PROTOCOL_VERSION)
+				strcat(talkToHost.string(), "PROTOCOL_VERSION:" PROTOCOL_VERSION);
+#endif
+#if defined(FIRMWARE_NAME)
+				strcat(talkToHost.string(), " FIRMWARE_NAME:" FIRMWARE_NAME);
+#endif
+#if defined (FIRMWARE_VERSION)
+				strcat(talkToHost.string(), " FIRMWARE_VERSION:" FIRMWARE_VERSION);
+#endif
+#if defined (FIRMWARE_URL)
+				strcat(talkToHost.string(), " FIRMWARE_URL:" FIRMWARE_URL);
+#endif
+#if defined(MACHINE_TYPE)
+				strcat(talkToHost.string(), " MACHINE_TYPE:" MACHINE_TYPE);
+#endif
+#if defined(EXTRUDER_COUNT)
+				strcat(talkToHost.string(), " EXTRUDER_COUNT:" xstr(EXTRUDER_COUNT));
+#endif
 				break;
 
 
