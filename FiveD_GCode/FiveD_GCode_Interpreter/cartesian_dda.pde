@@ -82,14 +82,14 @@ void cartesian_dda::set_units()
       units.x = X_STEPS_PER_MM;
       units.y = Y_STEPS_PER_MM;
       units.z = Z_STEPS_PER_MM;
-      units.e = ex[extruder_in_use]->stepsPerMM();
+      units.e = ex[extruder_in_use] ? ex[extruder_in_use]->stepsPerMM() : E0_STEPS_PER_MM;
       units.f = 1.0;
     } else
     {
       units.x = X_STEPS_PER_INCH;
       units.y = Y_STEPS_PER_INCH;
       units.z = Z_STEPS_PER_INCH;
-      units.e = ex[extruder_in_use]->stepsPerMM()*INCHES_TO_MM;
+      units.e = (ex[extruder_in_use] ? ex[extruder_in_use]->stepsPerMM() : E0_STEPS_PER_MM) * INCHES_TO_MM;
       units.f = 1.0;  
     }
 }
