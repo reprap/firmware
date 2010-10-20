@@ -37,7 +37,7 @@
   start
   
   once to the host before sending anything else.  This should not be replaced or augmented
-  by version numbers and the like.  We should implement an M code to request those.
+  by version numbers and the like.  M115 requests those.
        
  */
 

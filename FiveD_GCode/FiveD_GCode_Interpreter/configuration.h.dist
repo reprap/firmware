@@ -365,6 +365,8 @@ extern LongPoint zeroHit;
 
 //*************************************************************************
 
+// Stuff for Bath University RepRap Lab experimental machines
+
 #if 0
 // Green machine:
 //#define ENDSTOPS_INVERTING 0
