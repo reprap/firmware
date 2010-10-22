@@ -544,10 +544,15 @@ void process_string(char instruction[], int size)
 			//custom code for temperature reading
 			case 105:
                                 talkToHost.setETemp(ex[extruder_in_use]->getTemperature());
-#if MOTHERBOARD == 2
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485
+#if HEATED_BED == HEATED_BED_ON
                                 talkToHost.setBTemp(ex[0]->getBedTemperature());
-#else
+#endif
+#endif
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485
+#if HEATED_BED == HEATED_BED_ON
                                 talkToHost.setBTemp(heatedBed.getTemperature());
+#endif
 #endif
 				break;
 
@@ -596,32 +601,17 @@ void process_string(char instruction[], int size)
 				break;
 
 			//Reserved for returning machine capabilities in keyword:value pairs
+			//custom code for returning Firmware Version and Capabilities 
 			case 115:
-#if defined(PROTOCOL_VERSION)
-				strcat(talkToHost.string(), "PROTOCOL_VERSION:" PROTOCOL_VERSION);
-#endif
-#if defined(FIRMWARE_NAME)
-				strcat(talkToHost.string(), " FIRMWARE_NAME:" FIRMWARE_NAME);
-#endif
-#if defined (FIRMWARE_VERSION)
-				strcat(talkToHost.string(), " FIRMWARE_VERSION:" FIRMWARE_VERSION);
-#endif
-#if defined (FIRMWARE_URL)
-				strcat(talkToHost.string(), " FIRMWARE_URL:" FIRMWARE_URL);
-#endif
-#if defined(MACHINE_TYPE)
-				strcat(talkToHost.string(), " MACHINE_TYPE:" MACHINE_TYPE);
-#endif
-#if defined(EXTRUDER_COUNT)
-				strcat(talkToHost.string(), " EXTRUDER_COUNT:" xstr(EXTRUDER_COUNT));
-#endif
+                                talkToHost.capabilities();
 				break;
+
 
 
                         // TODO: make this work properly
                         case 116:
                              ex[extruder_in_use]->waitForTemperature();
-				break; 
+				break;
 
 			//custom code for returning zero-hit coordinates
 			case 117:
@@ -644,10 +634,15 @@ void process_string(char instruction[], int size)
                         case 140:
 				if (gc.seen & GCODE_S)
 				{
-#if MOTHERBOARD == 2
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485
+#if HEATED_BED == HEATED_BED_ON
 					ex[0]->setBedTemperature((int)gc.S);
-#else
+#endif
+#endif
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485
+#if HEATED_BED == HEATED_BED_ON
 					heatedBed.setTemperature((int)gc.S);
+#endif
 #endif				
                                 }
 				break;

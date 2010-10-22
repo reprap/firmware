@@ -28,7 +28,8 @@
 #ifndef INTERCOM_H
 #define INTERCOM_H
 
-#if MOTHERBOARD == 2
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485
+
 
 // Locations in a packet
 

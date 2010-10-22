@@ -1,13 +1,14 @@
 #ifndef PINS_H
 #define PINS_H
 
-#if MOTHERBOARD == 0
+#include "features.h"
 
-#error The Arduino cannot run the 5D GCode interpreter
+#if CPUTYPE == CPUTYPE_ATMEL168
+
+#error The Arduino_168 cannot likely run the 5D GCode interpreter
 
 /****************************************************************************************
-* Arduino pin assignment - left here as they might be useful
-*
+* Old Arduino168 pin assignment - left here as they might be useful
 ****************************************************************************************/
 
 #define X_STEP_PIN (byte)2
@@ -36,12 +37,20 @@
 #define EXTRUDER_0_VALVE_ENABLE_PIN          (byte)15 
 #define EXTRUDER_0_STEP_ENABLE_PIN  5 // 5 - NB conflicts with the fan; set -ve if no stepper
 
+//incase a user puts a STEPPER extruder on a Darwin, this makes the pin assignments equivalent:
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL
+#define EXTRUDER_0_STEP_PIN EXTRUDER_0_MOTOR_SPEED_PIN
+#define EXTRUDER_0_DIR_PIN EXTRUDER_0_MOTOR_DIR_PIN
+#define EXTRUDER_0_ENABLE_PIN EXTRUDER_0_STEP_ENABLE_PIN
+#endif
+
+#define DEBUG_PIN        0
 
 /****************************************************************************************
 * Sanguino/RepRap Motherboard with direct-drive extruders
 *
 ****************************************************************************************/
-#elif MOTHERBOARD == 1
+#elif (CPUTYPE == CPUTYPE_SANGUINO) && (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL)
 
 #ifndef __AVR_ATmega644P__
 #error Oops!  Make sure you have 'Sanguino' selected from the 'Tools -> Boards' menu.
@@ -94,11 +103,10 @@
 
 
 /****************************************************************************************
-* RepRap Motherboard with RS485 extruders
-*
+* RepRap "Gen 3" Motherboard with RS485 extruder/s
 ****************************************************************************************/
 
-#elif MOTHERBOARD == 2
+#elif (CPUTYPE == CPUTYPE_SANGUINO) && (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485)
 
 #ifndef __AVR_ATmega644P__
 #error Oops!  Make sure you have 'Sanguino' selected from the 'Tools -> Boards' menu.
@@ -145,18 +153,16 @@
 #define PS_ON_PIN       14
 
 /****************************************************************************************
-* Arduino Mega pin assignment
-*
+* Typical Arduino Mega pin assignment  ( using directly controlled extruder stepper, not RS485)
 ****************************************************************************************/
 
-#elif MOTHERBOARD == 3
+#elif (CPUTYPE == CPUTYPE_MEGA) && (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL)
 
 #ifndef __AVR_ATmega1280__
 #error Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu.
 #endif
 
-#ifdef ADRIAN_POLOLU_STRIPBOARD
-
+#if STEPPER_BOARD == ADRIAN_POLOLU_STRIPBOARD
 /*
   Pin definitions for the Pololu stripboard design here:
   
@@ -205,7 +211,7 @@
 
 #endif
 
-#ifdef ADRIAN_POLOLU_PCB
+#if STEPPER_BOARD == ADRIAN_POLOLU_PCB
 
 /*
   Pin definitions for the Pololu PCB design here:
@@ -255,13 +261,25 @@
 
 #endif
 
-#ifdef ULTIMACHINE_PCB
+#if STEPPER_BOARD == ULTIMACHINE_PCB
 // Johnny's pin defs in here...
+#error sorry, the ULTIMACHINE_PCB STEPPER_BOARD type is known, but pin assignments are not. 
 #endif
+
+#ifndef STEPPER_BOARD
+#error sorry, on the Mega, you must define a STEPPER_BOARD type, with pin assignments, etc.
+#endif
+
+/****************************************************************************************
+*  ANY OTHER TYPICAL MACHINE PINOUTS CAN GO HERE.
+****************************************************************************************/
+//#elif (CPUTYPE == CPUTYPE_XXXX) && (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL)
+
 
 #else
 
-#error Unknown MOTHERBOARD value in configuration.h
+#error Unknown CPUTYPE value in pins.h  Please add your setup, and let us know, so we  can add it.  join the list: reprap-dev@lists.reprap.org
+
 
 #endif
 

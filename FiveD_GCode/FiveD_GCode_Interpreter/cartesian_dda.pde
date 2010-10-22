@@ -26,8 +26,11 @@ cartesian_dda::cartesian_dda()
 	target_position.y = 0.0;
 	target_position.z = 0.0;
 	target_position.e = 0.0;
+#if ACCELERATION == ACCELERATION_ON
         target_position.f = SLOW_XY_FEEDRATE;
-
+#else
+        target_position.f = 0.0; // not used when not accellerating! 
+#endif
 // Set up the pin directions
   
 	pinMode(X_STEP_PIN, OUTPUT);
@@ -39,14 +42,17 @@ cartesian_dda::cartesian_dda()
 	pinMode(Z_STEP_PIN, OUTPUT);
 	pinMode(Z_DIR_PIN, OUTPUT);
 
-#if MOTHERBOARD > 0
+#ifdef X_ENABLE_PIN
 	pinMode(X_ENABLE_PIN, OUTPUT);
+#endif
+#ifdef Y_ENABLE_PIN
 	pinMode(Y_ENABLE_PIN, OUTPUT);
+#endif
+#ifdef Z_ENABLE_PIN
 	pinMode(Z_ENABLE_PIN, OUTPUT);
 #endif
 
 //turn the motors off at the start.
-
 	disable_steppers();
 
 #if ENDSTOPS_MIN_ENABLED == 1
@@ -139,7 +145,7 @@ void cartesian_dda::set_target(const FloatPoint& p)
           return;
         }    
 
-#ifndef ACCELERATION_ON
+#if ACCELERATION == ACCELERATION_ON
         current_steps.f = target_steps.f;
 #endif
 
@@ -377,13 +383,19 @@ void cartesian_dda::dda_start()
 
 void cartesian_dda::enable_steppers()
 {
-#if MOTHERBOARD > 0
+#ifdef X_ENABLE_PIN 
   if(delta_steps.x)
     digitalWrite(X_ENABLE_PIN, ENABLE_ON);
+#endif
+#ifdef Y_ENABLE_PIN
   if(delta_steps.y)    
     digitalWrite(Y_ENABLE_PIN, ENABLE_ON);
+    #endif
+#ifdef Z_ENABLE_PIN
   if(delta_steps.z)
     digitalWrite(Z_ENABLE_PIN, ENABLE_ON);
+    #endif
+#ifdef E_ENABLE_PIN
   if(delta_steps.e)
     ex[extruder_in_use]->enableStep();
 #endif  
@@ -393,7 +405,7 @@ void cartesian_dda::enable_steppers()
 
 void cartesian_dda::disable_steppers()
 {
-#if MOTHERBOARD > 0
+//#if MOTHERBOARD > 0
 	//disable our steppers
 #if DISABLE_X
 	digitalWrite(X_ENABLE_PIN, !ENABLE_ON);
@@ -407,7 +419,7 @@ void cartesian_dda::disable_steppers()
 
         ex[extruder_in_use]->disableStep();
         
-#endif
+//#endif
 }
 
 void cartesian_dda::shutdown()
@@ -416,4 +428,60 @@ void cartesian_dda::shutdown()
   nullmove = false;
   disable_steppers();
 }
+
+/* 
+#if MOVEMENT_TYPE == MOVEMENT_TYPE_GRAY_CODE
+void cartesian_dda::do_x_step()
+{
+if INVERT_X_DIR == 1
+          if ( x_direction ) { x_quadrature_state--; } else { x_quadrature_state++; }
+#else
+          if ( x_direction ) { x_quadrature_state++; } else { x_quadrature_state--; }
+#endif
+          if ( x_quadrature_state > 3 ) { x_quadrature_state = 0; }
+          if ( x_quadrature_state < 0 ) { x_quadrature_state = 3; }
+          int gray_code = x_quadrature_state ^ ( x_quadrature_state >> 1 ) ; //two significant bits in gray_code are the two pin states we want.
+          int X1 = gray_code & 1; //lower order bit
+          int X2 = gray_code & 2; //higher order bit
+          // write the quadrature/grey code to the two pins commonly referrred to as STEP and DIRECTION ( despite them not actually being that in this case)
+          digitalWrite(X_STEP_PIN, X1);
+          digitalWrite(X_DIR_PIN, X2);
+          delayMicrosecondsInterruptible(5);
+}
+void cartesian_dda::do_y_step()
+{
+#if INVERT_Y_DIR == 1
+          if ( y_direction ) { y_quadrature_state++; } else { y_quadrature_state--; }
+#else
+           if ( y_direction ) { y_quadrature_state--; } else { y_quadrature_state++; }
+#endif
+          if ( y_quadrature_state > 3 ) { y_quadrature_state = 0; }
+          if ( y_quadrature_state < 0 ) { y_quadrature_state = 3; }
+          int gray_code = y_quadrature_state ^ ( y_quadrature_state >> 1 ) ; //two significant bits in gray_code are the two pin states we want.
+          int Y1 = gray_code & 1; //lower order bit
+          int Y2 = gray_code & 2; //higher order bit
+         // write the quadrature/grey code to the two pins commonly referrred to as STEP and DIRECTION ( despite them not actually being that in this case)
+          digitalWrite(Y_STEP_PIN, Y1);
+          digitalWrite(Y_DIR_PIN, Y2);
+          delayMicrosecondsInterruptible(5);
+}
+void cartesian_dda::do_z_step()
+{
+#if INVERT_Z_DIR == 1
+          if ( z_direction ) { z_quadrature_state++; } else { z_quadrature_state--; }
+#else
+           if ( z_direction ) { z_quadrature_state--; } else { z_quadrature_state++; }
+#endif
+          if ( z_quadrature_state > 3 ) { z_quadrature_state = 0; }
+          if ( z_quadrature_state < 0 ) { z_quadrature_state = 3; }
+          int gray_code = z_quadrature_state ^ ( z_quadrature_state >> 1 ) ; //two significant bits in gray_code are the two pin states we want.
+          int Z1 = gray_code & 1; //lower order bit
+          int Z2 = gray_code & 2; //higher order bit
+         // write the quadrature/grey code to the two pins commonly referrred to as STEP and DIRECTION ( despite them not actually being that in this case)
+          digitalWrite(Z_STEP_PIN, Z1);
+          digitalWrite(Z_DIR_PIN, Z2);
+          delayMicrosecondsInterruptible(5);
+}
+#endif //MOVEMENT_TYPE == MOVEMENT_TYPE_GRAY_CODE
+*/
 

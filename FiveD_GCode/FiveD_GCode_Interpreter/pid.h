@@ -4,7 +4,8 @@
 // Based on the excellent Wikipedia PID control article.
 // See http://en.wikipedia.org/wiki/PID_controller
 
-#if MOTHERBOARD != 2
+// for heated beds OR direct PIC temperature control of the extruder without a separate CPU. 
+#if (HEATED_BED == HEATED_BED_ON) ||  (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL )
 
 class PIDcontrol
 {

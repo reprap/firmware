@@ -144,6 +144,9 @@ inline bool cartesian_dda::extruding()
 }
 
 
+//HINT: #if MOVEMENT_TYPE == MOVEMENT_TYPE_GRAY_CODE  see cartesian_dda.pde, as the are not "inline"
+
+#if MOVEMENT_TYPE == MOVEMENT_TYPE_STEP_DIR
 inline void cartesian_dda::do_x_step()
 {
 	digitalWrite(X_STEP_PIN, HIGH);
@@ -166,6 +169,12 @@ inline void cartesian_dda::do_e_step()
 {
         ex[extruder_in_use]->sStep();
 }
+#endif
+
+//TODO implement running a makerbot DC extruder here? 
+#if MOVEMENT_TYPE == MOVEMENT_TYPE_UNMANAGED_DC
+#error TODO need to fully implement running a makerbot DC extruder from reprap firmware
+#endif
 
 inline long cartesian_dda::calculate_feedrate_delay(const float& feedrate)
 {  
@@ -318,4 +327,25 @@ inline bool cartesian_dda::fCanStep(long current, long target, bool dir)
 
 	return !(target == current);
 }
+
+
+#if MOVEMENT_TYPE == MOVEMENT_TYPE_GRAY_CODE
+/*NOTE: EMC type 2 stepper driver is what we will achieve here :
+Type 2: Quadrature (aka Gray/Grey? code)
+State Phase A Phase B
+0 1 0
+1 1 1
+2 0 1
+3 0 0
+0 1 0
+Here's the simplest algorithm for translating binary to Gray code. This algorithm can convert an arbitrary binary number to Gray code in finite time. Wonderful! He
+grayCode = binary ^ (binary >> 1)
+*/
+int x_quadrature_state = 0; // allowable values are: 0,1,2,3
+int y_quadrature_state = 0; // allowable values are: 0,1,2,3
+int z_quadrature_state = 0;
+int e_quadrature_state = 0;
+// we also use x_direction and y_direction variables to decide the direction we roll through each quadrature
+#endif
+
 #endif

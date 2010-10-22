@@ -87,7 +87,7 @@ void extruder::temperatureError()
  * Darwin-style motherboard
  */
 
-#if MOTHERBOARD == 1 
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_DC
 
 extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, byte se_pin, float spm)
 {
@@ -273,7 +273,7 @@ void extruder::manage()
  * 
  * Arduino Mega motherboard
  */
-#if MOTHERBOARD == 3
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL
 
 static PIDcontrol ePID(EXTRUDER_0_HEATER_PIN, EXTRUDER_0_TEMPERATURE_PIN, false);
 

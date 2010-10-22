@@ -5,10 +5,13 @@
 
 #define HALF_DEAD_ZONE 5
 
-
-#if MOTHERBOARD != 2
-
+// we'll ignore this file unless we are using a thermistor soemwhere? 
 #ifdef USE_THERMISTOR
+
+#define NUMTEMPS 20
+
+// for heated beds OR direct PIC temperature control of the extruder without a separate CPU. 
+#if ( EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL )  || ( EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_DC ) 
 
 // This is the extruder thermistor...
 
@@ -20,7 +23,7 @@
 // r2: 4700
 // beta: 4036
 // max adc: 1023
-#define NUMTEMPS 20
+
 short temptable[NUMTEMPS][2] = {
    {1, 864},
    {54, 258},
@@ -44,6 +47,10 @@ short temptable[NUMTEMPS][2] = {
    {1008, 2}
 };
 
+#endif 
+
+
+#if HEATED_BED == HEATED_BED_ON 
 // ... And this is the heated bed thermistor (if any)
 
 // RS thermistor 484-0149; EPCOS B57550G103J
@@ -79,7 +86,7 @@ short bedtemptable[NUMTEMPS][2] = {
    {1008, -42}
 };
 
-
+#endif
  
 /*
  * Other thermistors...
@@ -331,7 +338,7 @@ short temptable[NUMTEMPS][2] = {
 
 */
 
-#endif
-#endif
+#endif //USE_THERMISTOR
+
 #endif
 

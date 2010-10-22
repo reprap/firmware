@@ -6,7 +6,7 @@
  */
 
 
-#if MOTHERBOARD != 2
+#if HEATED_BED == HEATED_BED_ON
 
 static PIDcontrol bPID(BED_HEATER_PIN, BED_TEMPERATURE_PIN, true);
 

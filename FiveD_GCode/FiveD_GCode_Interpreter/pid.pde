@@ -1,6 +1,7 @@
 #include "pid.h"
 
-#if MOTHERBOARD != 2
+// for heated beds OR direct PIC temperature control of the extruder without a separate CPU. 
+#if (HEATED_BED == HEATED_BED_ON) ||  (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL )
 
 // Based on the excellent Wikipedia PID control article.
 // See http://en.wikipedia.org/wiki/PID_controller
@@ -52,7 +53,7 @@ void PIDcontrol::setTarget(int t)
 
 void PIDcontrol::internalTemperature(short table[][2])
 {
-#ifdef USE_THERMISTOR
+#ifdef USE_THERMISTOR  // any thermistor here will do! 
   int raw = 0;
   for(int i = 0; i < 3; i++)
     raw += analogRead(temp_pin);
@@ -84,11 +85,11 @@ void PIDcontrol::internalTemperature(short table[][2])
 
 #endif
 
-#ifdef AD595_THERMOCOUPLE
+#if TEMP_SENSOR == TEMP_SENSOR_AD595_THERMOCOUPLE
   currentTemperature = ( 5.0 * analogRead(pin* 100.0) / 1024.0; //(int)(((long)500*(long)analogRead(TEMP_PIN))/(long)1024);
 #endif  
 
-#ifdef MAX6675_THERMOCOUPLE
+#if TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE
   int value = 0;
   byte error_tc;
 

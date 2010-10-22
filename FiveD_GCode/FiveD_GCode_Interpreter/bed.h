@@ -5,7 +5,7 @@
 #ifndef BED_H
 #define BED_H
 
-#if MOTHERBOARD != 2  
+#if HEATED_BED == HEATED_BED_ON
 
 class bed
 {
