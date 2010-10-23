@@ -189,27 +189,56 @@
 #define Z_MAX_PIN (byte)1
 #define Z_ENABLE_PIN (byte)33
 
+
+#endif //adrian pololu stripboard
+
+
+
+//HSBNE: 
+#if STEPPER_BOARD == HSBNE_POLOLU_PCB
+
+#define DEBUG_PIN 13
+
+//CHAN 1
+#define X_STEP_PIN (byte)51  //was 36
+#define X_DIR_PIN (byte)53  //was 23
+#define X_MIN_PIN (byte)4 // 20
+#define X_MAX_PIN (byte)3 //21
+#define X_ENABLE_PIN (byte)49  //was 24
+
+//CHAN 2
+#define Y_STEP_PIN (byte)43 //was 34
+#define Y_DIR_PIN (byte)45  //was 29
+#define Y_ENABLE_PIN (byte)41  //was 39
+#define Y_MIN_PIN (byte)5 //25
+#define Y_MAX_PIN (byte)3 //26
+
+//CHAN 3
+#define Z_STEP_PIN (byte)42 //was 25
+#define Z_DIR_PIN (byte)44  //was 26
+#define Z_MIN_PIN (byte)6 //2
+#define Z_MAX_PIN (byte)3 //1
+#define Z_ENABLE_PIN (byte)40 //was 27
+
+
 // Heated bed
 
-#define BED_HEATER_PIN (byte)3
+#define BED_HEATER_PIN (byte)10
 #define BED_TEMPERATURE_PIN (byte)1 
 
 
 //extruder pins
+#define EXTRUDER_0_STEP_PIN (byte)48 //26
+#define EXTRUDER_0_DIR_PIN (byte)50 //28
+#define EXTRUDER_0_ENABLE_PIN (byte)46 //30
 
-#define EXTRUDER_0_STEP_PIN (byte)30
-#define EXTRUDER_0_DIR_PIN (byte)15
-#define EXTRUDER_0_ENABLE_PIN (byte)14
-#define EXTRUDER_0_HEATER_PIN (byte)2
-#define EXTRUDER_0_TEMPERATURE_PIN (byte)0 
+#define EXTRUDER_0_HEATER_PIN (byte)9
+#define EXTRUDER_0_TEMPERATURE_PIN (byte)4 
 
-#define EXTRUDER_1_STEP_PIN (byte)4
-#define EXTRUDER_1_DIR_PIN (byte)5
-#define EXTRUDER_1_ENABLE_PIN (byte)6
-#define EXTRUDER_1_HEATER_PIN (byte)13
-#define EXTRUDER_1_TEMPERATURE_PIN (byte)2 
 
-#endif
+#endif  //HSBNE
+
+
 
 #if STEPPER_BOARD == ADRIAN_POLOLU_PCB
 
