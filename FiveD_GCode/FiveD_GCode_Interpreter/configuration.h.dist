@@ -61,9 +61,9 @@
 #define Z_STEPS_PER_MM   320
 #define INVERT_Z_DIR 0
 
-
-
 #define TEMP_SENSOR TEMP_SENSOR_RRRF100K_THERMISTOR  // RRRF 100k thermistor was typical for darwin, yes? 
+
+#define THERMAL_CONTROL THERMAL_CONTROL_SIMPLE
 
 #define DATA_SOURCE DATA_SOURCE_USB_SERIAL // well stream the data from USB to the CPU. 
 
@@ -129,13 +129,12 @@
 // normal Mendel uses neither a heated bed, nor an Internal extruder PID code: 
 //#define TEMP_SENSOR TEMP_SENSOR_RRRF10K_THERMISTOR  // Temperature measurement ( BED or Internal Extruder code. IF you use BOTH, you MUST use same measurement type - TODO fix this).
 
+#define THERMAL_CONTROL THERMAL_CONTROL_PID
+
 #define EXTRUDER_CONTROLLER EXTRUDER_CONTROLLER_RS485 // mendel usuallty uses RS485 extruder
 
 
-
-
 #define MOVEMENT_TYPE MOVEMENT_TYPE_STEP_DIR // darwin axes are moved around with STEP/DIRECTION logic.
-
 
 
 // pick the most likely pulley for a gen3 powered mendel 
@@ -225,13 +224,16 @@
 // use.  See pins.h, http://reprap.org/wiki/Pololu_Electronics and
 // http://reprap.org/wiki/Arduino_Mega_Pololu_Shield
 //#define STEPPER_BOARD ADRIAN_POLOLU_STRIPBOARD
-#define STEPPER_BOARD ADRIAN_POLOLU_PCB
+//#define STEPPER_BOARD ADRIAN_POLOLU_PCB
 //#define STEPPER_BOARD ULTIMACHINE_PCB 
+#define STEPPER_BOARD HSBNE_POLOLU_PCB
 
 
 #define CPUTYPE CPUTYPE_MEGA
 
 #define TEMP_SENSOR TEMP_SENSOR_RRRF100K_THERMISTOR  // RRRF 100k thermistor is typical yes?   ( BED or Internal Extruder code. IF you use BOTH, you MUST use same measurement type - TODO fix this).
+
+#define THERMAL_CONTROL THERMAL_CONTROL_SIMPLE
 
 #define EXTRUDER_CONTROLLER EXTRUDER_CONTROLLER_INTERNAL // mendel usuallty uses RS485 extruder
 
@@ -239,7 +241,6 @@
 // Set to 1 if enable pins are inverting
 // For RepRap stepper boards version 1.x the enable pins are *not* inverting.
 // For RepRap stepper boards version 2.x and above the enable pins are inverting.
-//#define INVERT_ENABLE_PINS 1
 #define ENABLE_PIN_STATE  ENABLE_PIN_STATE_INVERTING // For RepRap stepper boards version 2.x and above the enable pins are inverting.
 
 // Both Darwin and Mendel have MIN endstops, but not MAX ones.
@@ -253,7 +254,7 @@
 // RepRap opto endstops with H21LOI sensors are not inverting; ones with H21LOB
 // are inverting.
 // RepRap opto endstops with H21LOI sensors are not inverting; ones with H21LOB are inverting.
-#define ENDSTOP_OPTO_TYPE ENDSTOP_OPTO_TYPE_H21LOI
+#define ENDSTOP_OPTO_TYPE ENDSTOP_OPTO_TYPE_HSBNE_OMRON
 
 // are all axes using the same opto? 
 #define X_ENDSTOP_INVERTING ENDSTOP_OPTO_TYPE
@@ -272,8 +273,8 @@
 #if BELT_PULLEY_TYPE == MENDEL_8_TOOTH_ORIGINAL
 #define X_STEPS_PER_MM   80.376 // should really be defined as MICROSTEPPING*X
 #define Y_STEPS_PER_MM   80.376
-#define Z_STEPS_PER_MM   6667.184
-#define E0_STEPS_PER_MM  17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
+#define Z_STEPS_PER_MM   7000 //<-HSBNE 6667.184
+#define E0_STEPS_PER_MM  27.39 //<-HSBNE 17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
 #endif
 
 // these ones are for the newer 9-tooth pulley: set-screw-drive-pulley_4_6-5_9_7_3off
@@ -298,18 +299,16 @@
 #error PLEASE TELL US WHAT TYPE OF EXTRUDER PULLEY YOU ARE USING.. 8 or 9 toothed? 
 #endif
 
-#define INVERT_X_DIR 0
-#define INVERT_Y_DIR 0
-#define INVERT_Z_DIR 1
-
+#define INVERT_X_DIR 1
+#define INVERT_Y_DIR 1
+#define INVERT_Z_DIR 0
+#define INVERT_E_DIR 0
 
 // Stepper-driven extruder
 // E_STEPS_PER_MM is the number of steps needed to extrude 1mm out of the nozzle.  
 // E0 for extruder 0; E1 for extruder 1, and so on.
 //TODO use MICROSTEPPING constant here too? 
-//#define E_STEPS_PER_MM   0.9      // NEMA 17 extruder 5mm diameter drive - empirically adjusted
-#define E0_STEPS_PER_MM   17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
-#define E1_STEPS_PER_MM   17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
+
 
 // The number of real extruders in this machine
 #define EXTRUDER_COUNT 1
@@ -340,6 +339,9 @@
 #define DISABLE_Y 0
 #define DISABLE_Z 0
 #define DISABLE_E 0
+
+#define HEATED_BED  HEATED_BED_ON //HSBNE BED
+
 
 #endif
 
@@ -382,6 +384,8 @@
 
 #define TEMP_SENSOR TEMP_SENSOR_RRRF100K_THERMISTOR  // RRRF 100k thermistor? TODO verify this
 
+#define THERMAL_CONTROL THERMAL_CONTROL_PID
+
 #define EXTRUDER_CONTROLLER EXTRUDER_CONTROLLER_RS485 // assumed? 
 
 //most extruders are  large thermal mass, change this if you use a kapton tape based extruder element:
@@ -413,6 +417,7 @@
 #define DISABLE_Y 0
 #define DISABLE_Z 1
 #define DISABLE_E 0
+
 
 #endif
 
@@ -519,6 +524,11 @@
 #ifndef ENABLE_LINES 
 #error  You must define ENABLE_LINES as either HAS_ENABLE_LINES or  HAS_NO_ENABLE_LINES  
 #endif
+
+#ifndef EXTRUDER_CONTROLLER 
+#error  You must define EXTRUDER_CONTROLLER for you machine layout in configuration.h
+#endif
+
 
 // if we are not using aceleration code, we define these constants just to prevent compile errors on the unused 'f' coordinate of the DDA
 #ifndef SLOW_XY_FEEDRATE
