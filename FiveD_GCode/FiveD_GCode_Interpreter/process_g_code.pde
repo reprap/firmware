@@ -11,7 +11,7 @@ http://objects.reprap.org/wiki/Mendel_User_Manual:_RepRapGCodes
 
 */
 
-
+#include "features.h"
 #include "configuration.h"
 #include "pins.h"
 #include "extruder.h"
@@ -549,7 +549,7 @@ void process_string(char instruction[], int size)
                                 talkToHost.setBTemp(ex[0]->getBedTemperature());
 #endif
 #endif
-#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL
 #if HEATED_BED == HEATED_BED_ON
                                 talkToHost.setBTemp(heatedBed.getTemperature());
 #endif
@@ -634,14 +634,15 @@ void process_string(char instruction[], int size)
                         case 140:
 				if (gc.seen & GCODE_S)
 				{
+        
 #if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485
 #if HEATED_BED == HEATED_BED_ON
 					ex[0]->setBedTemperature((int)gc.S);
 #endif
 #endif
-#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL
 #if HEATED_BED == HEATED_BED_ON
-					heatedBed.setTemperature((int)gc.S);
+  					heatedBed.setTemperature((int)gc.S);
 #endif
 #endif				
                                 }
