@@ -63,7 +63,7 @@
 
 
  // extruders can be "fast heat" or "slow heat" types
- //#if EXTRUDER_THERMAL_MASS == EXTUDER_THERMAL_MASS_LARGE
+ //#if EXTRUDER_THERMAL_MASS == EXTRUDER_THERMAL_MASS_LARGE
  #define EXTRUDER_THERMAL_MASS_LARGE 1
  #define EXTRUDER_THERMAL_MASS_SMALL 2
 
@@ -84,6 +84,7 @@
    #define ADRIAN_POLOLU_STRIPBOARD 1   // see: http://reprap.org/wiki/Pololu_Electronics#Making_the_electronics_using_stripboard
    #define ADRIAN_POLOLU_PCB 2
    #define ULTIMACHINE_PCB 3
+   #define HSBNE_POLOLU_PCB 4
 
 // eg
 //#define MOVEMENT_TYPE MOVEMENT_TYPE_STEP_DIR  // when sending signals to the drivers, what electrical/logical interface will we use? - there are a number of possible different hardware methods for getting directional movement, here we decide which one we want to use normally:  
@@ -111,6 +112,7 @@
   #define ENDSTOP_OPTO_TYPE_OES2_1 ENDSTOP_OPTO_TYPE_INVERTING    //  http://reprap.org/wiki/OptoEndstop_2_1   - reprap Opto End Stop circuit revision 2.1  
   #define ENDSTOP_OPTO_TYPE_H21LOI ENDSTOP_OPTO_TYPE_NORMAL
   #define ENDSTOP_OPTO_TYPE_H21LOB ENDSTOP_OPTO_TYPE_INVERTING
+  #define ENDSTOP_OPTO_TYPE_HSBNE_OMRON ENDSTOP_OPTO_TYPE_INVERTING //HSBNE Mendel
   #define ENDSTOP_OPTO_TYPE_YOUR_TYPE ENDSTOP_OPTO_TYPE_INVERTING // if you have a published circuit  
   
   //eg:
@@ -165,6 +167,10 @@
 
 #define HEATED_BED_ON 1
 #define HEATED_BED_OFF 0
+
+//eg: #define THERMAL_CONTROL THERMAL_CONTROL_PID
+    #define THERMAL_CONTROL_PID 1     //more accurate but P,I,D values may need tweaking
+	#define THERMAL_CONTROL_SIMPLE 2  //BANG-BANG control. If temp is over requested turn off, if below, turn on.
 
 //-----------------------------------------------------------------------------------------------
 // IMMUTABLE (READONLY) CONSTANTS GO HERE:
