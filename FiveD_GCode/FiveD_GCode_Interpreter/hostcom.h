@@ -284,6 +284,7 @@ inline void hostcom::sendMessage(bool doMessage)
     put("X-DATA_SOURCE:"); put(DATA_SOURCE); putEnd();
     put("X-ACCELERATION:"); put(ACCELERATION); putEnd();
     put("X-HEATED_BED:"); put(HEATED_BED); putEnd();
+    put("X-STEPPER_BOARD:"); put(STEPPER_BOARD); putEnd();
     put("X-INVERT_X_DIR:"); put(INVERT_X_DIR); putEnd();
     put("X-INVERT_Y_DIR:"); put(INVERT_Y_DIR); putEnd();
     put("X-INVERT_Z_DIR:"); put(INVERT_Z_DIR); putEnd();
@@ -305,6 +306,7 @@ inline void hostcom::sendMessage(bool doMessage)
     #if EXTRUDER_COUNT == 2 
     put("X-E1_STEPS_PER_MM:"); put(E1_STEPS_PER_MM); putEnd();
     #endif
+    
     
     // terminate capabilities list with a blank line:
     putEnd();
