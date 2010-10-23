@@ -26,7 +26,7 @@
 #define FIRMWARE_NAME "FiveD"	// Please change this name if you fork the codebase
 #define FIRMWARE_URL "http%3A//reprap.org"	// Escape any colons as %3A
 #define MACHINE_TYPE "Mendel"	// Set to whatever bot you have, could be Darwin, Huxley, or Custom, etc.
-#define FIRMWARE_VERSION "20101022"	// Need to autoupdate this from svn or git.  FIXME.
+#define FIRMWARE_VERSION "20101023"	// Need to autoupdate this from svn or git.  FIXME.
 
 
 
