@@ -114,7 +114,6 @@ inline void extruder::disableStep()
 inline void extruder::sStep()
 {
    digitalWrite(motor_speed_pin, HIGH);
-   delayMicrosecondsInterruptible(5); 
    digitalWrite(motor_speed_pin, LOW);
 }
 #else 
