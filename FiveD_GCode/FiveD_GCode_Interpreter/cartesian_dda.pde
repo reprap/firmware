@@ -26,11 +26,8 @@ cartesian_dda::cartesian_dda()
 	target_position.y = 0.0;
 	target_position.z = 0.0;
 	target_position.e = 0.0;
-#if ACCELERATION == ACCELERATION_ON
-        target_position.f = SLOW_XY_FEEDRATE;
-#else
-        target_position.f = 0.0; // not used when not accellerating! 
-#endif
+    target_position.f = SLOW_XY_FEEDRATE;
+
 // Set up the pin directions
   
 	pinMode(X_STEP_PIN, OUTPUT);
@@ -405,7 +402,6 @@ void cartesian_dda::enable_steppers()
 
 void cartesian_dda::disable_steppers()
 {
-//#if MOTHERBOARD > 0
 	//disable our steppers
 #if DISABLE_X
 	digitalWrite(X_ENABLE_PIN, !ENABLE_ON);
@@ -419,7 +415,6 @@ void cartesian_dda::disable_steppers()
 
         ex[extruder_in_use]->disableStep();
         
-//#endif
 }
 
 void cartesian_dda::shutdown()
