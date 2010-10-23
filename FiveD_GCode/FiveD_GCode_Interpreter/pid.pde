@@ -134,7 +134,28 @@ void PIDcontrol::pidCalculation()
   else
     internalTemperature(temptable);
   
+
+#if THERMAL_CONTROL == THERMAL_CONTROL_SIMPLE
+
+  if(doingBed) {   //PWM for the bed
+    if (targetTemperature >= currentTemperature) {
+      analogWrite(heat_pin, 170);  //don't ever run bed above 170/255 PWM! ( ie approx 80% power) 
+    }else {
+      analogWrite(heat_pin, 30);  //even when off, we run it on low to "warm" it gently
+    } 
+ //   Serial.println("bed");
+  }else {  // ban-bang for the extruder 
+  if (targetTemperature >= currentTemperature)
+    digitalWrite(heat_pin, 1);  //100% power 
+  else
+    digitalWrite(heat_pin, 0);  //no power
+  }
+#endif
+
+#if THERMAL_CONTROL == THERMAL_CONTROL_PID
+
   float error = (float)(targetTemperature - currentTemperature);
+
   int output;
   if(error < -band)
   {
@@ -164,6 +185,13 @@ void PIDcontrol::pidCalculation()
   }
   
   analogWrite(heat_pin, output);
+
+#endif
+
+#ifndef THERMAL_CONTROL
+#error You have not defined THERMAL_CONTROL in configuration.h
+#endif
+
 }
 
 
