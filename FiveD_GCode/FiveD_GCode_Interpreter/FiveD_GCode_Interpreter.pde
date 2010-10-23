@@ -217,6 +217,8 @@ void setup()
   init_process_string();
   
   talkToHost.start();
+  
+   // validate_hardware(); 
  
  // turn on remote powersupply, if it's possible
 #ifdef PS_ON_PIN 
@@ -310,7 +312,41 @@ void loop()
 }
 
 //******************************************************************************************
+// checkover the basic settings and report anything unusual? 
+void validate_hardware() { 
+  
+  if (( ENDSTOPS_MIN_ENABLED == 0 ) && (ENDSTOPS_MAX_ENABLED == 0) ) { Serial.println("V: no endstops enabled ( please enable at least one)"); }
 
+	//if ( ( ENDSTOPS_INVERTING == 1 ) && (!digitalRead(X_MIN_PIN)) ) {  Serial.println("V: i-X endstop inverted or triggered"); }
+	//if ( ( ENDSTOPS_INVERTING == 0 ) && (digitalRead(X_MIN_PIN)) ) {  Serial.println("V: X endstop inverted or triggered"); }
+
+	//if ( ( ENDSTOPS_INVERTING == 1 ) && (!digitalRead(Y_MIN_PIN)) ) {  Serial.println("V: i-Y endstop inverted or triggered"); }
+	//if ( ( ENDSTOPS_INVERTING == 0 ) && (digitalRead(Y_MIN_PIN)) ) {  Serial.println("V: Y endstop inverted or triggered"); }
+
+	//if ( ( ENDSTOPS_INVERTING == 1 ) && (!digitalRead(Z_MIN_PIN)) ) {  Serial.println("V: i-Z endstop inverted or triggered"); }
+	//if ( ( ENDSTOPS_INVERTING == 0 ) && (digitalRead(Z_MIN_PIN)) ) {  Serial.println("V: Z endstop inverted or triggered"); }
+
+        if (  USE_THERMISTOR == 0 ) { Serial.println("V: not configured to use a thermistor, unlikely!"); }
+        if ( EXTRUDER_COUNT > 1 ) { Serial.println("V: multiple extruders are setup! Are u sure? "); }
+        
+        if ( ENABLE_PIN_STATE == ENABLE_PIN_STATE_INVERTING ) { Serial.println("V: still not stepping? check ENABLE_PIN_STATE if it should be inverting (it is) "); } 
+        
+        Serial.print("V: X-endstop-pin-raw-reading: ");Serial.println(digitalRead(X_MIN_PIN));
+        Serial.print("V: Y-endstop-pin-raw-reading: ");Serial.println(digitalRead(Y_MIN_PIN));
+        Serial.print("V: Z-endstop-pin-raw-reading: ");Serial.println(digitalRead(Z_MIN_PIN));
+        
+        delay(1000);
+        ex[extruder_in_use]->manage();
+        int t = ex[extruder_in_use]->getTemperature();
+        Serial.print("V: temp is ");
+        Serial.println(t);
+	if ( t > 250) { Serial.println("V: Temperature reading is likely invalid ( >250 )");  } 
+	if ( t < 5 ) { Serial.println("V: Temperature reading is likely invalid ( < 5 )");  } 
+
+
+        Serial.println("V: Validate done");
+
+}
 // The move buffer
 
 inline void cancelAndClearQueue()
