@@ -263,18 +263,17 @@
 
 // Motherboard 3 driving Pololu microstepping controllers - 16 microsteps
 #define MICROSTEPPING 16
-// Axis scaling in stepper-motor steps per mm of movement
 
 // pick the most likely
 #define BELT_PULLEY_TYPE MENDEL_8_TOOTH_ORIGINAL
-
 
 // The steps/mm figures are for the original Mendel 8-toothed belt pulley
 #if BELT_PULLEY_TYPE == MENDEL_8_TOOTH_ORIGINAL
 #define X_STEPS_PER_MM   80.376 // should really be defined as MICROSTEPPING*X
 #define Y_STEPS_PER_MM   80.376
-#define Z_STEPS_PER_MM   7000 //<-HSBNE 6667.184
-#define E0_STEPS_PER_MM  27.39 //<-HSBNE 17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
+#define Z_STEPS_PER_MM   6667.184
+//E0_STEPS_PER_MM is the number of steps needed to extrude 1mm out of the nozzle.  
+#define E0_STEPS_PER_MM  17.6      // NEMA 17 59/11 geared extruder 8mm diameter drive
 #endif
 
 // these ones are for the newer 9-tooth pulley: set-screw-drive-pulley_4_6-5_9_7_3off
@@ -286,7 +285,7 @@
 #define E0_STEPS_PER_MM   15.25
 #endif
 
-// The third set of commented out values are for the 13-tooted pulleys set-screw-drive-pulley_7_9-5_13_7-3off.stl
+// These values are for the 13-toothed pulleys set-screw-drive-pulley_7_9-5_13_7-3off.stl
 // See mendel/mechanics/solid-models/cartesian-robot-m4/printed-parts/alternative-parts/readme
 #if BELT_PULLEY_TYPE == MENDEL_13_TOOTH
 #define X_STEPS_PER_MM   49.462  // should really be defined as MICROSTEPPING*X
@@ -303,11 +302,6 @@
 #define INVERT_Y_DIR 1
 #define INVERT_Z_DIR 0
 #define INVERT_E_DIR 0
-
-// Stepper-driven extruder
-// E_STEPS_PER_MM is the number of steps needed to extrude 1mm out of the nozzle.  
-// E0 for extruder 0; E1 for extruder 1, and so on.
-//TODO use MICROSTEPPING constant here too? 
 
 
 // The number of real extruders in this machine
