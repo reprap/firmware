@@ -47,7 +47,8 @@
 #define DEBUG_PIN        0
 
 /****************************************************************************************
-* Sanguino/RepRap Motherboard with direct-drive extruders
+* Sanguino/RepRap Motherboard with a direct-connected stepper extruder, and NOT a RS485 connected "extruder controller".
+* note: most likely, if you are using an "Extruder Controller" PCB, you want the NEXT set of definitions, not this one. 
 *
 ****************************************************************************************/
 #elif (CPUTYPE == CPUTYPE_SANGUINO) && (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL)
@@ -57,6 +58,14 @@
 #endif
 
 #define DEBUG_PIN        0
+
+
+#define STEPPER_BOARD STEPPER_DRIVER_TWO_POINT_THREE
+
+
+#if STEPPER_BOARD == STEPPER_DRIVER_TWO_POINT_THREE
+// Standard RepRap Stepper Driver v. 2.3 pin defs
+
 
 #define X_STEP_PIN (byte)15
 #define X_DIR_PIN (byte)18
@@ -75,6 +84,12 @@
 #define Z_MIN_PIN (byte)2
 #define Z_MAX_PIN (byte)1
 #define Z_ENABLE_PIN (byte)31
+
+#endif
+
+#if STEPPER_BOARD != STEPPER_DRIVER_TWO_POINT_THREE
+#error The only pre-configured stepper driver pinout for Gen3 is the STEPPER_DRIVER_TWO_POINT_THREE board.
+#endif
 
 // Heated bed - TODO: reassign these
 
@@ -103,7 +118,8 @@
 
 
 /****************************************************************************************
-* RepRap "Gen 3" Motherboard with RS485 extruder/s
+* RepRap "Gen 3" Motherboard with RS485 Extruder Controller and SDA/SCL wired to D9(DIR) & D10(STEP)
+*   TIP: This is a "typical Gen3" setup .
 ****************************************************************************************/
 
 #elif (CPUTYPE == CPUTYPE_SANGUINO) && (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485)
@@ -111,6 +127,12 @@
 #ifndef __AVR_ATmega644P__
 #error Oops!  Make sure you have 'Sanguino' selected from the 'Tools -> Boards' menu.
 #endif
+
+#define STEPPER_BOARD STEPPER_DRIVER_TWO_POINT_THREE
+
+#if STEPPER_BOARD == STEPPER_DRIVER_TWO_POINT_THREE
+// Standard RepRap Stepper Driver v. 2.3 pin defs
+
 
 //x axis pins
 #define X_STEP_PIN      15
@@ -133,6 +155,12 @@
 #define Z_MIN_PIN       30
 #define Z_MAX_PIN       31
 
+#endif
+
+#if STEPPER_BOARD != STEPPER_DRIVER_TWO_POINT_THREE
+#error The only pre-configured steppr driver pinout for Gen3 is the STEPPER_DRIVER_TWO_POINT_THREE board.
+#endif
+
 #define E_STEP_PIN      17
 #define E_DIR_PIN       16
 
@@ -153,7 +181,9 @@
 #define PS_ON_PIN       14
 
 /****************************************************************************************
-* Typical Arduino Mega pin assignment  ( using directly controlled extruder stepper, not RS485)
+* Typical Arduino Mega + Pololu Board Setup
+*  ( using directly controlled extruder stepper, not RS485)
+* THere are three pre-configured pinouts, if you want yours added, please let us know.
 ****************************************************************************************/
 
 #elif (CPUTYPE == CPUTYPE_MEGA) && (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL)
@@ -293,6 +323,12 @@
 #if STEPPER_BOARD == ULTIMACHINE_PCB
 // Johnny's pin defs in here...
 #error sorry, the ULTIMACHINE_PCB STEPPER_BOARD type is known, but pin assignments are not. 
+#endif
+
+#if STEPPER_BOARD == STEPPER_DRIVER_TWO_POINT_THREE
+// Standard RepRap Stepper Driver v. 2.3 pin defs are in the MENDEL_GEN3_DEFAULTS section.
+// If perchance you are using a Arduino Mega CPU, but are using Gen3 stepper drivers, then copy the pinouts from there to here.
+#error Using STEPPER_DRIVER_TWO_POINT_THREE with a Mega CPU is not currently supported, but if you REALLY meant to configure it this way, it should be easy to do.
 #endif
 
 #ifndef STEPPER_BOARD
