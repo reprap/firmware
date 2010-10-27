@@ -1,5 +1,6 @@
 #ifndef TEMPERATURE_H
 #define TEMPERATURE_H
+#define NUMTEMPS 20
 
 #ifdef USE_THERMISTOR
 
@@ -13,7 +14,6 @@
 // r2: 4700
 // beta: 4036
 // max adc: 1023
-#define NUMTEMPS 20
 short temptable[NUMTEMPS][2] = {
    {1, 864},
    {54, 258},
@@ -37,6 +37,11 @@ short temptable[NUMTEMPS][2] = {
    {1008, 2}
 };
 
+#else
+  // hack.. this got it to compile (TODO: remove the necessity for us to have a fake temp table)
+  short temptable[NUMTEMPS][2] = {};
+#endif
+
 // ... And this is the heated bed thermistor (if any)
 
 // RS thermistor 484-0149; EPCOS B57550G103J
@@ -48,6 +53,8 @@ short temptable[NUMTEMPS][2] = {
 // r2: 4700
 // beta: 3480
 // max adc: 1023
+
+#ifdef USE_BED_THERMISTOR
 
 short bedtemptable[NUMTEMPS][2] = {
    {1, 599},
@@ -75,7 +82,11 @@ short bedtemptable[NUMTEMPS][2] = {
 
 
 
+#else
+  // hack.. this got it to compile (TODO: remove the necessity for us to have a fake temp table)
+  short bedtemptable[NUMTEMPS][2] = {};
 #endif
+
 #endif
 
  
