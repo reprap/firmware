@@ -16,9 +16,13 @@
 // pre-select a typical setup from the below list
 //   using typical pinouts and typical capabilities. see features.h for what typical setups we have available
 //#define DEFAULTS DARWIN_DEFAULTS
-#define DEFAULTS MENDEL_GEN3_DEFAULTS
+//#define DEFAULTS MENDEL_GEN3_DEFAULTS
 //#define DEFAULTS MENDEL_MEGA_DEFAULTS
 //#define DEFAULTS BATHPROTO_DEFAULTS
+
+#ifndef DEFAULTS
+#error Please edit configuration.h and at the very least uncomment one of the DEFAULTS definitions that best-matches your hardware.
+#endif
 
 
 
@@ -108,8 +112,9 @@
 #endif
 
 //**********************************************************************************************
-// These settings are typical for a standard Gen3 Mendel
-//*********************************************************************************************
+// These settings are typical for a standard Gen3 Mendel 
+//    using a STEPPER driven extruder and RS485 Extruder Controller
+///*********************************************************************************************
 #if DEFAULTS ==  MENDEL_GEN3_DEFAULTS 
 
 //#define MENDEL 1
@@ -132,7 +137,7 @@
 
 #define THERMAL_CONTROL THERMAL_CONTROL_PID
 
-#define EXTRUDER_CONTROLLER EXTRUDER_CONTROLLER_RS485 // mendel usuallty uses RS485 extruder
+#define EXTRUDER_CONTROLLER EXTRUDER_CONTROLLER_RS485 // mendel usually uses RS485 for temperature, etc and the SDA/SCL lines ( to D9 and D10) for step& direction pins for stepper control. 
 
 
 #define MOVEMENT_TYPE MOVEMENT_TYPE_STEP_DIR // darwin axes are moved around with STEP/DIRECTION logic.
@@ -162,8 +167,8 @@
 #error PLEASE TELL US WHAT TYPE OF EXTRUDER PULLEY YOU ARE USING.. 8 or 9 toothed? 
 #endif
 
-#define INVERT_X_DIR 1
-#define INVERT_Y_DIR 1
+#define INVERT_X_DIR 0
+#define INVERT_Y_DIR 0
 #define INVERT_Z_DIR 0
 
 #define TEMP_SENSOR TEMP_SENSOR_RRRF100K_THERMISTOR  // RRRF 100k thermistor is typical for mendel, yes? 
@@ -192,8 +197,7 @@
 #define FAST_XY_FEEDRATE 3000.0
 #define FAST_Z_FEEDRATE  50.0
 
-//#define ACCELERATION  ACCELERATION_ON
-#define ACCELERATION  ACCELERATION_OFF
+#define ACCELERATION  ACCELERATION_ON
 
 // Set these to 1 to disable an axis when it's not being used,
 // and for the extruder.  Usually only Z is disabled when not in
@@ -212,7 +216,7 @@
 // classic mendel does not have heated bed, it's a newer feature
 #define HEATED_BED HEATED_BED_OFF
 
-// gen3 mendel use stepper motor driver v. 2.3
+// gen3 mendel use stepper motor driver v. 2.3 for XY&Z ( and use Extruder Controller 2.2 over RS485 for E)
 #define STEPPER_BOARD STEPPER_DRIVER_TWO_POINT_THREE
 
 
