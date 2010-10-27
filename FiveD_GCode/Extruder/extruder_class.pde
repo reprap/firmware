@@ -64,7 +64,7 @@ void PIDcontrol::internalTemperature(short table[][2])
 #endif
 
 #ifdef AD595_THERMOCOUPLE
-  currentTemperature = ( 5.0 * analogRead(pin* 100.0) / 1024.0; //(int)(((long)500*(long)analogRead(TEMP_PIN))/(long)1024);
+  currentTemperature = ( 500.0 * analogRead(temp_pin) / 1024.0); //(int)(((long)500*(long)analogRead(TEMP_PIN))/(long)1024);
 #endif  
 
 #ifdef MAX6675_THERMOCOUPLE
