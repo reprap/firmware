@@ -85,6 +85,7 @@
    #define ADRIAN_POLOLU_PCB 2
    #define ULTIMACHINE_PCB 3
    #define HSBNE_POLOLU_PCB 4
+   #define STEPPER_DRIVER_TWO_POINT_THREE 5 // see: http://reprap.org/wiki/Stepper_Motor_Driver_2.3
 
 // eg
 //#define MOVEMENT_TYPE MOVEMENT_TYPE_STEP_DIR  // when sending signals to the drivers, what electrical/logical interface will we use? - there are a number of possible different hardware methods for getting directional movement, here we decide which one we want to use normally:  
