@@ -16,8 +16,8 @@
 // pre-select a typical setup from the below list
 //   using typical pinouts and typical capabilities. see features.h for what typical setups we have available
 //#define DEFAULTS DARWIN_DEFAULTS
-//#define DEFAULTS MENDEL_GEN3_DEFAULTS
-#define DEFAULTS MENDEL_MEGA_DEFAULTS
+#define DEFAULTS MENDEL_GEN3_DEFAULTS
+//#define DEFAULTS MENDEL_MEGA_DEFAULTS
 //#define DEFAULTS BATHPROTO_DEFAULTS
 
 
@@ -119,7 +119,8 @@
 #define ENABLE_PIN_STATE  ENABLE_PIN_STATE_INVERTING // For RepRap stepper boards version 2.x and above the enable pins are inverting.
 
 // RepRap opto endstops with H21LOI sensors are not inverting; ones with H21LOB are inverting.
-#define ENDSTOP_OPTO_TYPE ENDSTOP_OPTO_TYPE_H21LOI
+//#define ENDSTOP_OPTO_TYPE ENDSTOP_OPTO_TYPE_H21LOI
+#define ENDSTOP_OPTO_TYPE ENDSTOP_OPTO_TYPE_H21LOB
 
 // are all axes using the same opto? 
 #define X_ENDSTOP_INVERTING ENDSTOP_OPTO_TYPE
@@ -161,8 +162,8 @@
 #error PLEASE TELL US WHAT TYPE OF EXTRUDER PULLEY YOU ARE USING.. 8 or 9 toothed? 
 #endif
 
-#define INVERT_X_DIR 0
-#define INVERT_Y_DIR 0
+#define INVERT_X_DIR 1
+#define INVERT_Y_DIR 1
 #define INVERT_Z_DIR 0
 
 #define TEMP_SENSOR TEMP_SENSOR_RRRF100K_THERMISTOR  // RRRF 100k thermistor is typical for mendel, yes? 
@@ -191,7 +192,8 @@
 #define FAST_XY_FEEDRATE 3000.0
 #define FAST_Z_FEEDRATE  50.0
 
-#define ACCELERATION  ACCELERATION_ON
+//#define ACCELERATION  ACCELERATION_ON
+#define ACCELERATION  ACCELERATION_OFF
 
 // Set these to 1 to disable an axis when it's not being used,
 // and for the extruder.  Usually only Z is disabled when not in
@@ -209,6 +211,9 @@
 
 // classic mendel does not have heated bed, it's a newer feature
 #define HEATED_BED HEATED_BED_OFF
+
+// gen3 mendel use stepper motor driver v. 2.3
+#define STEPPER_BOARD STEPPER_DRIVER_TWO_POINT_THREE
 
 
 #endif
