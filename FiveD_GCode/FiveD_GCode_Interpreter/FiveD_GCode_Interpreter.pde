@@ -356,6 +356,22 @@ inline void cancelAndClearQueue()
 		cdda[i]->shutdown();
 }
 
+inline void waitFor_qEmpty()
+{
+// while waiting maintain the temperatures
+  while(!qEmpty()) {
+    manage();
+  }
+}
+ 
+inline void waitFor_qNotFull()
+{
+// while waiting maintain the temperatures
+  while(qFull()) {
+    manage();
+  }
+}
+
 inline bool qFull()
 {
   if(tail == 0)
@@ -371,7 +387,7 @@ inline bool qEmpty()
 
 inline void qMove(const FloatPoint& p)
 {
-  while(qFull()) delay(WAITING_DELAY);
+  waitFor_qNotFull();
   byte h = head; 
   h++;
   if(h >= BUFFER_SIZE)

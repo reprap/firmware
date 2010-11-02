@@ -189,7 +189,9 @@
 #elif (CPUTYPE == CPUTYPE_MEGA) && (EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL)
 
 #ifndef __AVR_ATmega1280__
-#error Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu.
+ #ifndef __AVR_ATmega2560__
+  #error Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu.
+ #endif
 #endif
 
 #if STEPPER_BOARD == ADRIAN_POLOLU_STRIPBOARD

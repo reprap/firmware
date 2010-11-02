@@ -446,7 +446,7 @@ void process_string(char instruction[], int size)
 		// Non-buffered G commands
                 // Wait till the buffer q is empty first
                     
-                  while(!qEmpty()) delay(WAITING_DELAY);
+                  waitFor_qEmpty(); //while(!qEmpty()) delay(WAITING_DELAY);
                   //delay(2*WAITING_DELAY); // For luck
 		  switch (gc.G)
 		  {
@@ -495,7 +495,7 @@ void process_string(char instruction[], int size)
 	if (gc.seen & GCODE_M)
 	{
             // Wait till the q is empty first
-            while(!qEmpty()) delay(WAITING_DELAY);
+            waitFor_qEmpty(); //while(!qEmpty()) delay(WAITING_DELAY);
             //delay(2*WAITING_DELAY);
 		switch (gc.M)
 		{
@@ -668,7 +668,7 @@ void process_string(char instruction[], int size)
                 
         if (gc.seen & GCODE_T)
         {
-            while(!qEmpty()) delay(WAITING_DELAY);
+            waitFor_qEmpty(); //while(!qEmpty()) delay(WAITING_DELAY);
             //delay(2*WAITING_DELAY);
             newExtruder(gc.T);
         }
