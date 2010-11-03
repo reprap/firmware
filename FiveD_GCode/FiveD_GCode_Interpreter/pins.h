@@ -221,6 +221,26 @@
 #define Z_MAX_PIN (byte)1
 #define Z_ENABLE_PIN (byte)33
 
+// Heated bed
+
+#define BED_HEATER_PIN (byte)3
+#define BED_TEMPERATURE_PIN (byte)1 
+
+
+//extruder pins
+
+#define EXTRUDER_0_STEP_PIN (byte)30
+#define EXTRUDER_0_DIR_PIN (byte)15
+#define EXTRUDER_0_ENABLE_PIN (byte)14
+#define EXTRUDER_0_HEATER_PIN (byte)2
+#define EXTRUDER_0_TEMPERATURE_PIN (byte)0 
+
+#define EXTRUDER_1_STEP_PIN (byte)4
+#define EXTRUDER_1_DIR_PIN (byte)5
+#define EXTRUDER_1_ENABLE_PIN (byte)6
+#define EXTRUDER_1_HEATER_PIN (byte)13
+#define EXTRUDER_1_TEMPERATURE_PIN (byte)2 
+
 
 #endif //adrian pololu stripboard
 

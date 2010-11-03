@@ -142,7 +142,7 @@ void cartesian_dda::set_target(const FloatPoint& p)
           return;
         }    
 
-#if ACCELERATION == ACCELERATION_ON
+#if ACCELERATION != ACCELERATION_ON
         current_steps.f = target_steps.f;
 #endif
 

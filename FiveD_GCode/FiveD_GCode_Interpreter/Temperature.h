@@ -52,7 +52,7 @@ short temptable[NUMTEMPS][2] = {
 
 #if HEATED_BED == HEATED_BED_ON 
 // ... And this is the heated bed thermistor (if any)
-
+/*
 //HSBNE heated bed settings
 // using Jaycar 125deg 10k thermistor and 4.7k R
 short bedtemptable[NUMTEMPS][2] = {
@@ -80,7 +80,7 @@ short bedtemptable[NUMTEMPS][2] = {
 
 
 #endif
-
+*/
 // RS thermistor 484-0149; EPCOS B57550G103J
 // Made with createTemperatureLookup.py (http://svn.reprap.org/trunk/reprap/firmware/Arduino/utilities/createTemperatureLookup.py)
 // ./createTemperatureLookup.py --r0=10000 --t0=25 --r1=0 --r2=4700 --beta=3480 --max-adc=1023
@@ -90,7 +90,7 @@ short bedtemptable[NUMTEMPS][2] = {
 // r2: 4700
 // beta: 3480
 // max adc: 1023
-/*
+
 short bedtemptable[NUMTEMPS][2] = {
    {1, 599},
    {54, 160},
@@ -113,8 +113,7 @@ short bedtemptable[NUMTEMPS][2] = {
    {955, -16},
    {1008, -42}
 };
-
-*/
+#endif
  
 /*
  * Other thermistors...
@@ -369,4 +368,5 @@ short temptable[NUMTEMPS][2] = {
 #endif //USE_THERMISTOR
 
 #endif
+
 
