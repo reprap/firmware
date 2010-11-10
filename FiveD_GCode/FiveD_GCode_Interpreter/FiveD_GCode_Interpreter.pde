@@ -251,15 +251,11 @@ void shutdown()
   
 #if ENABLE_LINES == HAS_ENABLE_LINES
 // Motors off
-#if DISABLE_X 
+// Note - we ignore DISABLE_X etc here; we are
+// definitely turning everything off.
   digitalWrite(X_ENABLE_PIN, !ENABLE_ON);
-#endif
-#if DISABLE_Y 
   digitalWrite(Y_ENABLE_PIN, !ENABLE_ON);
-  #endif
-#if DISABLE_Z 
   digitalWrite(Z_ENABLE_PIN, !ENABLE_ON);
-#endif
 #endif
 
   // Stop the extruders
