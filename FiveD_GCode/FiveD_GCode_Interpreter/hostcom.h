@@ -23,6 +23,8 @@
   rs means resend, and must be followed by the line number to resend.
   !! means that a hardware fault has been detected.  The RepRap machine will
        shut down immediately after it has sent this message.
+  // means a non-error informational string, that the host ignores. These display in the debug/console modes only.  These can be seen at any time.
+  
        
   The T: and B: values are the temperature of the currently-selected extruder 
   and the bed respectively, and are only sent in response to a request using the
@@ -41,7 +43,11 @@
   
   once to the host before sending anything else.  This should not be replaced or augmented
   by version numbers and the like.  M115 requests those.
-       
+     
+
+  A line ending with a single "\" character immediately before the newline is considered 
+    continued on the next line, as if the newline character was not present at all.  
+  
  */
 
 // Can't get lower than absolute zero...
@@ -62,6 +68,7 @@ public:
   void setResend(long ln);
   void setFatal();
   void sendMessage(bool doMessage);
+  void informational(char* message);
   void start();
   
 // Wrappers for the comms interface
@@ -74,6 +81,7 @@ public:
   void put(double i);  //overloading!
   void put(); // to allow putting an undefined constant as "n/a"
   void putEnd();
+  void putWs();
   byte gotData();
   char get();
   
@@ -109,6 +117,7 @@ inline void hostcom::put(const int i) { Serial.print(i); }
 inline void hostcom::put(double i) { Serial.print(i); }
 inline void hostcom::put() { Serial.print("n/a"); }
 inline void hostcom::putEnd() { Serial.println(); }
+inline void hostcom::putWs() { Serial.println(" \\"); }
 inline byte hostcom::gotData() { return Serial.available(); }
 inline char hostcom::get() { return Serial.read(); }
 #endif // DATA_SOURCE_USB_SERIAL
@@ -143,6 +152,15 @@ inline void hostcom::start()
 {
   putInit();
   put("start");
+  putEnd();  
+}
+
+// sent info to the host verbatum, and immediately, try to avoid using this very much
+inline void hostcom::informational(char * message)
+{
+  putInit();
+  put("// ");
+  put(message);
   putEnd();  
 }
 
@@ -264,49 +282,50 @@ inline void hostcom::sendMessage(bool doMessage)
     //HINT: if you get a compile error on a variable here, it's because you havent defined that variable in the right section of CONFIGURATION.H
     
     // agreed avlues:
-   put("PROTOCOL_VERSION:"); put(PROTOCOL_VERSION); putEnd();
-   put("FIRMWARE_NAME:"); put(FIRMWARE_NAME); putEnd();
-   put("FIRMWARE_VERSION:"); put(FIRMWARE_VERSION); putEnd();
-   put("FIRMWARE_URL:"); put(FIRMWARE_URL); putEnd();
-   put("MACHINE_TYPE:"); put(MACHINE_TYPE); putEnd();
-   put("X-EXTRUDER_COUNT:"); put(xstr(EXTRUDER_COUNT)); putEnd();  //num as string
+   putWs();
+   put("PROTOCOL_VERSION:"); put(PROTOCOL_VERSION); putWs();
+   put("FIRMWARE_NAME:"); put(FIRMWARE_NAME); putWs();
+   put("FIRMWARE_VERSION:"); put(FIRMWARE_VERSION); putWs();
+   put("FIRMWARE_URL:"); put(FIRMWARE_URL); putWs();
+   put("MACHINE_TYPE:"); put(MACHINE_TYPE); putWs();
+   put("X-EXTRUDER_COUNT:"); put(xstr(EXTRUDER_COUNT)); putWs();  //num as string
    // experimental values:
-    put("X-FIRMWARE_BUILD_TIMESTAMP"); put( __DATE__ " " __TIME__ ); putEnd();
-    put("X-REVISION:"); put(REVISION); putEnd();
-    put("X-CPUTYPE:"); put(CPUTYPE); putEnd();
-    put("X-DEFAULTS:"); put(DEFAULTS); putEnd();
-    put("X-MOVEMENT_TYPE:"); put(MOVEMENT_TYPE); putEnd();
-    put("X-ENDSTOP_OPTO_TYPE:"); put(ENDSTOP_OPTO_TYPE); putEnd();
-    put("X-ENABLE_PIN_STATE:"); put(ENABLE_PIN_STATE); putEnd();
-    put("X-TEMP_SENSOR:"); put(TEMP_SENSOR); putEnd();
-    put("X-EXTRUDER_CONTROLLER:"); put(EXTRUDER_CONTROLLER); putEnd();
-    put("X-EXTRUDER_THERMAL_MASS:"); put(EXTRUDER_THERMAL_MASS); putEnd();
-    put("X-DATA_SOURCE:"); put(DATA_SOURCE); putEnd();
-    put("X-ACCELERATION:"); put(ACCELERATION); putEnd();
-    put("X-HEATED_BED:"); put(HEATED_BED); putEnd();
-    put("X-STEPPER_BOARD:"); put(STEPPER_BOARD); putEnd();
-    put("X-INVERT_X_DIR:"); put(INVERT_X_DIR); putEnd();
-    put("X-INVERT_Y_DIR:"); put(INVERT_Y_DIR); putEnd();
-    put("X-INVERT_Z_DIR:"); put(INVERT_Z_DIR); putEnd();
-    put("X-ENDSTOPS_MIN_ENABLED:"); put(ENDSTOPS_MIN_ENABLED); putEnd();
-    put("X-ENDSTOPS_MAX_ENABLED:"); put(ENDSTOPS_MAX_ENABLED); putEnd();
-    put("X-ENABLE_LINES:"); put(ENABLE_LINES); putEnd();
+    put("X-FIRMWARE_BUILD_TIMESTAMP"); put( __DATE__ " " __TIME__ ); putWs();
+    put("X-REVISION:"); put(REVISION); putWs();
+    put("X-CPUTYPE:"); put(CPUTYPE); putWs();
+    put("X-DEFAULTS:"); put(DEFAULTS); putWs();
+    put("X-MOVEMENT_TYPE:"); put(MOVEMENT_TYPE); putWs();
+    put("X-ENDSTOP_OPTO_TYPE:"); put(ENDSTOP_OPTO_TYPE); putWs();
+    put("X-ENABLE_PIN_STATE:"); put(ENABLE_PIN_STATE); putWs();
+    put("X-TEMP_SENSOR:"); put(TEMP_SENSOR); putWs();
+    put("X-EXTRUDER_CONTROLLER:"); put(EXTRUDER_CONTROLLER); putWs();
+    put("X-EXTRUDER_THERMAL_MASS:"); put(EXTRUDER_THERMAL_MASS); putWs();
+    put("X-DATA_SOURCE:"); put(DATA_SOURCE); putWs();
+    put("X-ACCELERATION:"); put(ACCELERATION); putWs();
+    put("X-HEATED_BED:"); put(HEATED_BED); putWs();
+    put("X-STEPPER_BOARD:"); put(STEPPER_BOARD); putWs();
+    put("X-INVERT_X_DIR:"); put(INVERT_X_DIR); putWs();
+    put("X-INVERT_Y_DIR:"); put(INVERT_Y_DIR); putWs();
+    put("X-INVERT_Z_DIR:"); put(INVERT_Z_DIR); putWs();
+    put("X-ENDSTOPS_MIN_ENABLED:"); put(ENDSTOPS_MIN_ENABLED); putWs();
+    put("X-ENDSTOPS_MAX_ENABLED:"); put(ENDSTOPS_MAX_ENABLED); putWs();
+    put("X-ENABLE_LINES:"); put(ENABLE_LINES); putWs();
     #if ENABLE_LINES == HAS_ENABLE_LINES
-    put("X-DISABLE_X:"); put(DISABLE_X); putEnd();
-    put("X-DISABLE_Y:"); put(DISABLE_Y); putEnd();
-    put("X-DISABLE_Z:"); put(DISABLE_Z); putEnd();
-    put("X-DISABLE_E:"); put(DISABLE_E); putEnd();
+    put("X-DISABLE_X:"); put(DISABLE_X); putWs();
+    put("X-DISABLE_Y:"); put(DISABLE_Y); putWs();
+    put("X-DISABLE_Z:"); put(DISABLE_Z); putWs();
+    put("X-DISABLE_E:"); put(DISABLE_E); putWs();
     #endif
-    put("X-FAST_XY_FEEDRATE:"); put(FAST_XY_FEEDRATE); putEnd();
-    put("X-FAST_Z_FEEDRATE:"); put(FAST_Z_FEEDRATE); putEnd();
-    put("X-X_STEPS_PER_MM:"); put(X_STEPS_PER_MM); putEnd();
-    put("X-Y_STEPS_PER_MM:"); put(Y_STEPS_PER_MM); putEnd();
-    put("X-Z_STEPS_PER_MM:"); put(Z_STEPS_PER_MM); putEnd();
-    put("X-E0_STEPS_PER_MM:"); put(E0_STEPS_PER_MM); putEnd();
+    put("X-FAST_XY_FEEDRATE:"); put(FAST_XY_FEEDRATE); putWs();
+    put("X-FAST_Z_FEEDRATE:"); put(FAST_Z_FEEDRATE); putWs();
+    put("X-X_STEPS_PER_MM:"); put(X_STEPS_PER_MM); putWs();
+    put("X-Y_STEPS_PER_MM:"); put(Y_STEPS_PER_MM); putWs();
+    put("X-Z_STEPS_PER_MM:"); put(Z_STEPS_PER_MM); putWs();
+    put("X-E0_STEPS_PER_MM:"); put(E0_STEPS_PER_MM); putWs();
     #if EXTRUDER_COUNT == 2 
-    put("X-E1_STEPS_PER_MM:"); put(E1_STEPS_PER_MM); putEnd();
+    put("X-E1_STEPS_PER_MM:"); put(E1_STEPS_PER_MM); putWs();
     #endif
-    
+    put(" ");  // so the response doesn't end in a putWs() - which would be a "continued on next line". 
     
     // terminate capabilities list with a blank line:
     putEnd();
