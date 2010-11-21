@@ -34,6 +34,12 @@ void extruder::waitForTemperature()
   count = 0;
   newT = 0;
   oldT = newT;
+  
+  char msgstring[21];
+  char retnum[4]; 
+ 
+  // short-circuit of its already pre-heated 
+  if ( getTemperature() + HALF_DEAD_ZONE >= getTarget() ) { return; } // return immediate if we are close enough!
 
   while (true)
   {
@@ -45,6 +51,12 @@ void extruder::waitForTemperature()
       if(newT >= getTarget() - HALF_DEAD_ZONE)
       {
         warming = false;
+        
+          strcpy(msgstring,"At Temperature:");
+          sprintf( retnum, "%d", newT);
+          strcat (msgstring, retnum);
+          talkToHost.informational(msgstring);
+          
         if(seconds > WAIT_AT_TEMPERATURE)
           return;
         else 
@@ -53,8 +65,13 @@ void extruder::waitForTemperature()
 
       if(warming)
       {
-        if(newT > oldT)
+        if(newT > oldT) {
           oldT = newT;
+          strcpy(msgstring,"Warming Nozzle:");
+          sprintf( retnum, "%d", newT);
+          strcat (msgstring, retnum);
+          talkToHost.informational(msgstring);
+        }
         else
         {
           // Temp isn't increasing - extruder hardware error
