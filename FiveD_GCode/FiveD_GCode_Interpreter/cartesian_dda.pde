@@ -56,6 +56,13 @@ cartesian_dda::cartesian_dda()
 	pinMode(X_MIN_PIN, INPUT);
 	pinMode(Y_MIN_PIN, INPUT);
 	pinMode(Z_MIN_PIN, INPUT);
+
+// pullup resistors:
+#if OPTO_PULLUPS_INTERNAL == 1
+        digitalWrite(X_MIN_PIN,HIGH);
+        digitalWrite(Y_MIN_PIN,HIGH);
+        digitalWrite(Z_MIN_PIN,HIGH);
+#endif
 #endif
 
 #if ENDSTOPS_MAX_ENABLED == 1
