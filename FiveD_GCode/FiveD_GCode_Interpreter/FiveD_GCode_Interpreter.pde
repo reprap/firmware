@@ -605,3 +605,9 @@ void delayMicrosecondsInterruptible(unsigned int us)
     );
 }
 
+
+char * int2str( unsigned long num ) {
+  static char retnum[21];       // enough for 20 digits plus NUL from a 64-bit uint
+  sprintf( retnum, "%ul", num );
+  return retnum;
+}
