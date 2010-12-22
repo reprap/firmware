@@ -240,7 +240,9 @@
 
 #define CPUTYPE CPUTYPE_MEGA
 
-#define TEMP_SENSOR TEMP_SENSOR_RRRF100K_THERMISTOR  // RRRF 100k thermistor is typical yes?   ( BED or Internal Extruder code. IF you use BOTH, you MUST use same measurement type - TODO fix this).
+#define TEMP_SENSOR TEMP_SENSOR_RRRF100K_THERMISTOR  // RRRF 100k thermistor is typical yes?   
+// #define BED_TEMP_SENSOR TEMP_SENSOR_RRRF100K_THERMISTOR  // uncomment this and modify it if your heated bed sensor is different from your extruder 
+
 
 #define THERMAL_CONTROL THERMAL_CONTROL_SIMPLE
 
@@ -488,7 +490,13 @@
 #endif                       // *RO
 
 //derived generic thermistor truth test? 
-#if ((TEMP_SENSOR == TEMP_SENSOR_EPCOS540_THERMISTOR) || (TEMP_SENSOR == TEMP_SENSOR_EPCOS560_THERMISTOR) || (TEMP_SENSOR == TEMP_SENSOR_RRRF100K_THERMISTOR) || (TEMP_SENSOR ==  TEMP_SENSOR_RRRF10K_THERMISTOR) || (TEMP_SENSOR == TEMP_SENSOR_RS10K_THERMISTOR )) 
+#if (      (TEMP_SENSOR == TEMP_SENSOR_EPCOS540_THERMISTOR) \
+		|| (TEMP_SENSOR == TEMP_SENSOR_EPCOS560_THERMISTOR) \
+		|| (TEMP_SENSOR == TEMP_SENSOR_RRRF100K_THERMISTOR) \
+		|| (TEMP_SENSOR ==  TEMP_SENSOR_RRRF10K_THERMISTOR) \
+		|| (TEMP_SENSOR == TEMP_SENSOR_RS10K_THERMISTOR ) \
+		|| (TEMP_SENSOR == TEMP_SENSOR_RS100K_THERMISTOR ) \
+		|| (TEMP_SENSOR == TEMP_JAYCAR_NTC_125DEG_10K_THERMISTOR) ) 
 #define USE_THERMISTOR 1 //generic definition, set by the above. 
 #endif
 
@@ -496,6 +504,17 @@
 #ifndef HEATED_BED
 #define HEATED_BED HEATED_BED_OFF
 #endif
+
+// if user didn't specify the type of thermistor/sensor on their heated bed, but the heated bed is 
+// enabled, then assume it's the same as their extruder sensor:
+#ifndef BED_TEMP_SENSOR 
+#define BED_TEMP_SENSOR TEMP_SENSOR 
+#else
+#ifndef HEATED_BED 
+#error you can not set the BED_TEMP_SENSOR constant without having HEATED_BED also set.
+#endif
+#endif 
+
 
 // if user specified a single E value, and no E0 value, it's a Darwin, lets define it as E0:
 #ifndef E0_STEPS_PER_MM
