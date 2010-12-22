@@ -298,8 +298,11 @@ inline void hostcom::sendMessage(bool doMessage)
     put("X-ENDSTOP_OPTO_TYPE:"); put(ENDSTOP_OPTO_TYPE); putWs();
     put("X-ENABLE_PIN_STATE:"); put(ENABLE_PIN_STATE); putWs();
     put("X-TEMP_SENSOR:"); put(TEMP_SENSOR); putWs();
+	put("X-BED_TEMP_SENSOR:"); put(BED_TEMP_SENSOR); putWs();
+	put("X-EXTRUDER_THERMAL_MASS:"); put(EXTRUDER_THERMAL_MASS); putWs();
     put("X-EXTRUDER_CONTROLLER:"); put(EXTRUDER_CONTROLLER); putWs();
     put("X-EXTRUDER_THERMAL_MASS:"); put(EXTRUDER_THERMAL_MASS); putWs();
+    put("X-THERMAL_CONTROL:"); put(THERMAL_CONTROL); putWs();
     put("X-DATA_SOURCE:"); put(DATA_SOURCE); putWs();
     put("X-ACCELERATION:"); put(ACCELERATION); putWs();
     put("X-HEATED_BED:"); put(HEATED_BED); putWs();
