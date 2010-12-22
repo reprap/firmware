@@ -28,6 +28,18 @@ PIDcontrol::PIDcontrol(byte hp, byte tp, bool b)
    setTarget(0);
    pinMode(heat_pin, OUTPUT);
    pinMode(temp_pin, INPUT); 
+  
+#if TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE
+  pinMode(E_MISO, INPUT);
+  pinMode(E_SCK, OUTPUT);
+  pinMode(E_CS, OUTPUT);
+#endif
+
+#if BED_TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE
+  pinMode(B_MISO, INPUT);
+  pinMode(B_SCK, OUTPUT);
+  pinMode(B_CS, OUTPUT);
+#endif
 }
 
 /*
@@ -85,47 +97,73 @@ void PIDcontrol::internalTemperature(short table[][2])
 
 #endif
 
-#if TEMP_SENSOR == TEMP_SENSOR_AD595_THERMOCOUPLE
-  currentTemperature = ( 5.0 * analogRead(pin* 100.0) / 1024.0; //(int)(((long)500*(long)analogRead(TEMP_PIN))/(long)1024);
+#if TEMP_SENSOR == TEMP_SENSOR_AD595_THERMOCOUPLE 
+  if(!doingBed) {
+  	currentTemperature = ( 5.0 * analogRead(temp_pin* 100.0) / 1024.0; //(int)(((long)500*(long)analogRead(TEMP_PIN))/(long)1024);
+  	return;
+  }
 #endif  
+#if BED_TEMP_SENSOR == TEMP_SENSOR_AD595_THERMOCOUPLE
+  if(doingBed) {
+  	currentTemperature = ( 5.0 * analogRead(temp_pin* 100.0) / 1024.0; //(int)(((long)500*(long)analogRead(TEMP_PIN))/(long)1024);
+  	return;
+  }
+#endif
+#if TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE || BED_TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE
+ // depending on the bed or extruder we may read diferent thermocouples ( if we have two! ) 
+ if(doingBed) {
+   read_max6675(B_CS,B_SCK,B_MISO);  
+ } else {
+   read_max6675(E_CS,E_SCK,E_MISO);     
+ }
+ 
+#endif
 
-#if TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE
-  int value = 0;
-  byte error_tc;
+}
 
+#if TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE || BED_TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE
+// read from one of the thermcouples, and store into the currentTemperature variable in the current object. 
+int PIDcontrol::read_max6675(int tc_0, int sck, int miso ) {
 
-  digitalWrite(TC_0, 0); // Enable device
+   int value = 0;
+   byte error_tc;
+ // don't read more often than 200 ms
+ if (  millis() - last_read > 200 )  { 
+   
+   last_read = millis();
+
+  digitalWrite(tc_0, 0); // Enable device
 
   /* Cycle the clock for dummy bit 15 */
-  digitalWrite(SCK,1);
-  digitalWrite(SCK,0);
+  digitalWrite(sck,1);
+  digitalWrite(sck,0);
 
   /* Read bits 14-3 from MAX6675 for the Temp
    	 Loop for each bit reading the value 
    */
   for (int i=11; i>=0; i--)
   {
-    digitalWrite(SCK,1);  // Set Clock to HIGH
-    value += digitalRead(SO) << i;  // Read data and add it to our variable
-    digitalWrite(SCK,0);  // Set Clock to LOW
+    digitalWrite(sck,1);  // Set Clock to HIGH
+    value += digitalRead(miso) << i;  // Read data and add it to our variable
+    digitalWrite(sck,0);  // Set Clock to LOW
   }
 
   /* Read the TC Input inp to check for TC Errors */
-  digitalWrite(SCK,1); // Set Clock to HIGH
-  error_tc = digitalRead(SO); // Read data
-  digitalWrite(SCK,0);  // Set Clock to LOW
+  digitalWrite(sck,1); // Set Clock to HIGH
+  error_tc = digitalRead(miso); // Read data
+  digitalWrite(sck,0);  // Set Clock to LOW
 
-  digitalWrite(TC_0, 1); //Disable Device
+  digitalWrite(tc_0, 1); //Disable Device
 
   if(error_tc)
     currentTemperature = 2000;
   else
     currentTemperature = value/4;
-
-#endif
-
+    
+ } // read 
+ 
 }
-
+#endif
 
 void PIDcontrol::pidCalculation()
 {
