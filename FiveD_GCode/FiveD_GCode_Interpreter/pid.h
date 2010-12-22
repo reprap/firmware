@@ -23,6 +23,11 @@ private:
   float band;
   byte heat_pin, temp_pin;
   int currentTemperature, targetTemperature;
+
+#if TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE || BED_TEMP_SENSOR == TEMP_SENSOR_MAX6675_THERMOCOUPLE
+  unsigned long last_read; // don't read more often than 200ms or it'll give you the old value! 
+  int read_max6675(int tc_0, int sck, int miso );
+#endif  
  
   void internalTemperature(short table[][2]); 
   
