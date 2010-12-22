@@ -26,6 +26,7 @@ void setupGcodeProcessor();
 void init_process_string();
 void cancelAndClearQueue();
 void get_and_do_command();
+void setupThermistors();
 
 void process_string(char instruction[], int size);
 
@@ -193,6 +194,8 @@ void setup()
   pinMode(DEBUG_PIN, OUTPUT);
   led = false;
   
+  setupThermistors(); // map the correct thermistor table to the correct thermistor ( extruder or bed )
+  
   setupGcodeProcessor();
   
   ex[0] = &ex0;
@@ -218,7 +221,8 @@ void setup()
   
   talkToHost.start();
   
-   // validate_hardware(); 
+  // uncomment this line , upload, and immdiately connect to the "Serial Monitor" to help with exruder and endstop issues
+   //validate_hardware(); 
  
  // turn on remote powersupply, if it's possible
 #ifdef PS_ON_PIN 
@@ -313,34 +317,50 @@ void validate_hardware() {
   
   if (( ENDSTOPS_MIN_ENABLED == 0 ) && (ENDSTOPS_MAX_ENABLED == 0) ) { Serial.println("V: no endstops enabled ( please enable at least one)"); }
 
-	//if ( ( ENDSTOPS_INVERTING == 1 ) && (!digitalRead(X_MIN_PIN)) ) {  Serial.println("V: i-X endstop inverted or triggered"); }
-	//if ( ( ENDSTOPS_INVERTING == 0 ) && (digitalRead(X_MIN_PIN)) ) {  Serial.println("V: X endstop inverted or triggered"); }
+        pinMode(X_MIN_PIN, INPUT);
+         pinMode(Y_MIN_PIN, INPUT);
+       pinMode(Z_MIN_PIN, INPUT);
 
-	//if ( ( ENDSTOPS_INVERTING == 1 ) && (!digitalRead(Y_MIN_PIN)) ) {  Serial.println("V: i-Y endstop inverted or triggered"); }
-	//if ( ( ENDSTOPS_INVERTING == 0 ) && (digitalRead(Y_MIN_PIN)) ) {  Serial.println("V: Y endstop inverted or triggered"); }
+  
+  if (( ENDSTOPS_MIN_ENABLED == 0 ) && (ENDSTOPS_MAX_ENABLED == 0) ) { Serial.println("// no endstops enabled ( please enable at least one ot ENDSTOPS_MIN_ENABLED or ENDSTOPS_MAX_ENABLED)"); }
 
-	//if ( ( ENDSTOPS_INVERTING == 1 ) && (!digitalRead(Z_MIN_PIN)) ) {  Serial.println("V: i-Z endstop inverted or triggered"); }
-	//if ( ( ENDSTOPS_INVERTING == 0 ) && (digitalRead(Z_MIN_PIN)) ) {  Serial.println("V: Z endstop inverted or triggered"); }
+        int e = 2; //invalid default 
 
-        if (  USE_THERMISTOR == 0 ) { Serial.println("V: not configured to use a thermistor, unlikely!"); }
-        if ( EXTRUDER_COUNT > 1 ) { Serial.println("V: multiple extruders are setup! Are u sure? "); }
+	if ( ( ENDSTOP_OPTO_TYPE == ENDSTOP_OPTO_TYPE_INVERTING) && (!digitalRead(X_MIN_PIN)) ) {  Serial.println("// X endstop inverted ( change ENDSTOP_OPTO_TYPE to ENDSTOP_OPTO_TYPE_NORMAL ) or sensor triggered"); e = 0; }
+	if ( ( ENDSTOP_OPTO_TYPE == ENDSTOP_OPTO_TYPE_NORMAL ) && (digitalRead(X_MIN_PIN)) ) {  Serial.println("// X endstop inverted ( change ENDSTOP_OPTO_TYPE to ENDSTOP_OPTO_TYPE_INVERTING ) or sensor triggered"); e = 1;}
+
+	if ( ( ENDSTOP_OPTO_TYPE == ENDSTOP_OPTO_TYPE_INVERTING ) && (!digitalRead(Y_MIN_PIN)) ) {  Serial.println("// Y endstop inverted (change ENDSTOP_OPTO_TYPE to ENDSTOP_OPTO_TYPE_NORMAL ) or sensor triggered"); e = 0; }
+	if ( ( ENDSTOP_OPTO_TYPE == ENDSTOP_OPTO_TYPE_NORMAL ) && (digitalRead(Y_MIN_PIN)) ) {  Serial.println("// Y endstop inverted ( change ENDSTOP_OPTO_TYPE to ENDSTOP_OPTO_TYPE_INVERTING ) or sensor triggered"); e = 1; }
+
+	if ( ( ENDSTOP_OPTO_TYPE == ENDSTOP_OPTO_TYPE_INVERTING ) && (!digitalRead(Z_MIN_PIN)) ) {  Serial.println("// Z endstop inverted ( change ENDSTOP_OPTO_TYPE to ENDSTOP_OPTO_TYPE_NORMAL) or sensor triggered"); e = 0; }
+	if ( ( ENDSTOP_OPTO_TYPE == ENDSTOP_OPTO_TYPE_NORMAL ) && (digitalRead(Z_MIN_PIN)) ) {  Serial.println("// Z endstop IS inverted ( change ENDSTOP_OPTO_TYPE to ENDSTOP_OPTO_TYPE_INVERTING ) or sensor triggered"); e = 1 ; }
+
+
+         if ( e == 0 || e == 1 ) { 
+           Serial.println("HINT:  If your optos are all electrically connected right , and the sensors are not blocked ... then you are geting the above message/s because you have not defined the opto correctly in the configuration.h");
+           Serial.println("tThe usual Symptom, if you leave your opto/s incorrectly configured is that XY&Z steppers will only turn one way , but the Extruder stepper will turn either"); 
+         }
+
+//        if (  USE_THERMISTOR == 0 ) { Serial.println("// not configured to use a thermistor, unlikely! see USE_THERMISTOR constant"); }
+        if ( EXTRUDER_COUNT > 1 ) { Serial.println("// multiple extruders are setup! Are u sure?  see EXTRUDER_COUNT constant."); }
         
-        if ( ENABLE_PIN_STATE == ENABLE_PIN_STATE_INVERTING ) { Serial.println("V: still not stepping? check ENABLE_PIN_STATE if it should be inverting (it is) "); } 
+        if ( ENABLE_PIN_STATE == ENABLE_PIN_STATE_INVERTING ) { Serial.println("// still not stepping? check ENABLE_PIN_STATE if it should be inverting (it is) "); } 
         
-        Serial.print("V: X-endstop-pin-raw-reading: ");Serial.println(digitalRead(X_MIN_PIN));
-        Serial.print("V: Y-endstop-pin-raw-reading: ");Serial.println(digitalRead(Y_MIN_PIN));
-        Serial.print("V: Z-endstop-pin-raw-reading: ");Serial.println(digitalRead(Z_MIN_PIN));
+
+        Serial.print("// X-endstop-pin-raw-reading (X_MIN_PIN): ");Serial.println(digitalRead(X_MIN_PIN));
+        Serial.print("// Y-endstop-pin-raw-reading (Y_MIN_PIN): ");Serial.println(digitalRead(Y_MIN_PIN));
+        Serial.print("// Z-endstop-pin-raw-reading (Z_MIN_PIN): ");Serial.println(digitalRead(Z_MIN_PIN));
         
         delay(1000);
         ex[extruder_in_use]->manage();
         int t = ex[extruder_in_use]->getTemperature();
-        Serial.print("V: temp is ");
+        Serial.print("// temp is ");
         Serial.println(t);
-	if ( t > 250) { Serial.println("V: Temperature reading is likely invalid ( >250 )");  } 
-	if ( t < 5 ) { Serial.println("V: Temperature reading is likely invalid ( < 5 )");  } 
+	if ( t > 250) { Serial.println("// Temperature reading is likely invalid ( >250 )");  } 
+	if ( t < 5 ) { Serial.println("// Temperature reading is likely invalid ( < 5 )");  } 
 
 
-        Serial.println("V: Validate done");
+        Serial.println("// Validate done  ( press reset on the arduino/sanguino/mega to re-run ) ");
 
 }
 // The move buffer
