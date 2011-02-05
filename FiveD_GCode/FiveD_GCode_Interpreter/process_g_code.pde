@@ -130,7 +130,16 @@ void zeroX()
   where_i_am.f = SLOW_XY_FEEDRATE;
   specialMoveX(where_i_am.x + 1, SLOW_XY_FEEDRATE);
   specialMoveX(where_i_am.x - 10, SLOW_XY_FEEDRATE);                                
-  where_i_am.x = 0;  
+  where_i_am.x = 0;
+ 
+  // Wait for movements to finish, then check we hit the stop
+ 
+  while(!qEmpty()) delay(WAITING_DELAY);
+  if(!(endstop_hits & X_LOW_HIT))
+  {
+    sprintf(talkToHost.string(), "X endstop not hit - hard fault.");
+    talkToHost.setFatal();
+  }  
 }
 
 void zeroY()
@@ -141,7 +150,16 @@ void zeroY()
   where_i_am.f = SLOW_XY_FEEDRATE;
   specialMoveY(where_i_am.y + 1, SLOW_XY_FEEDRATE);
   specialMoveY(where_i_am.y - 10, SLOW_XY_FEEDRATE);                                
-  where_i_am.y = 0; 
+  where_i_am.y = 0;
+ 
+  // Wait for movements to finish, then check we hit the stop
+  
+  while(!qEmpty()) delay(WAITING_DELAY);
+  if(!(endstop_hits & Y_LOW_HIT))
+  {
+    sprintf(talkToHost.string(), "Y endstop not hit - hard fault.");
+    talkToHost.setFatal();
+  }   
    
 }
 
@@ -154,7 +172,16 @@ void zeroZ()
   where_i_am.f = SLOW_Z_FEEDRATE;
   specialMoveZ(where_i_am.z + 1, SLOW_Z_FEEDRATE);
   specialMoveZ(where_i_am.z - 2, SLOW_Z_FEEDRATE);                                
-  where_i_am.z = 0;  
+  where_i_am.z = 0;
+  
+  // Wait for movements to finish, then check we hit the stop
+
+  while(!qEmpty()) delay(WAITING_DELAY);
+  if(!(endstop_hits & Z_LOW_HIT))
+  {
+    sprintf(talkToHost.string(), "Z endstop not hit - hard fault.");
+    talkToHost.setFatal();
+  }     
 }
 
 //our feedrate variables.

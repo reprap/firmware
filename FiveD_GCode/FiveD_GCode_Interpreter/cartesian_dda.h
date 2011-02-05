@@ -190,14 +190,24 @@ inline long cartesian_dda::calculate_feedrate_delay(const float& feedrate)
 
 inline bool cartesian_dda::xCanStep(long current, long target, bool dir)
 {
+
+        // clear the hit bits
+        
+        endstop_hits &= (~X_LOW_HIT & ~X_HIGH_HIT);
+        
 //stop us if we're on target
 
 	if (target == current)
 		return false;
-
+        
 //stop us if we're home and still going lower
 
 #if ENDSTOPS_MIN_ENABLED == 1
+
+        // Set the low hit bit
+        
+        endstop_hits |= X_LOW_HIT;
+        
 #if X_ENDSTOP_INVERTING
 	if(!dir && !digitalRead(X_MIN_PIN) )
         {
@@ -211,11 +221,21 @@ inline bool cartesian_dda::xCanStep(long current, long target, bool dir)
 		return false;
         }
 #endif
-#endif
 
+        // clear the low hit bit
+        
+        endstop_hits &= ~X_LOW_HIT;
+        
+#endif
+        
 //stop us if we're at max and still going higher
 
 #if ENDSTOPS_MAX_ENABLED == 1
+
+        // Set the high hit bit
+        
+        endstop_hits |= X_HIGH_HIT;
+        
 #if X_ENDSTOP_INVERTING
 	if(dir && !digitalRead(X_MAX_PIN) )
 		return false;
@@ -223,7 +243,13 @@ inline bool cartesian_dda::xCanStep(long current, long target, bool dir)
 	if(!dir && digitalRead(X_MAX_PIN) )
 		return false;
 #endif
+
+        // Clear the high hit bit
+        
+        endstop_hits &= ~X_HIGH_HIT;
+
 #endif
+
 
 // All OK - we can step
   
@@ -232,6 +258,11 @@ inline bool cartesian_dda::xCanStep(long current, long target, bool dir)
 
 inline bool cartesian_dda::yCanStep(long current, long target, bool dir)
 {
+  
+        // clear the hit bits
+        
+        endstop_hits &= (~Y_LOW_HIT & ~Y_HIGH_HIT);
+        
 //stop us if we're on target
 
 	if (target == current)
@@ -240,6 +271,11 @@ inline bool cartesian_dda::yCanStep(long current, long target, bool dir)
 //stop us if we're home and still going lower
 
 #if ENDSTOPS_MIN_ENABLED == 1
+
+        // Set the low hit bit
+        
+        endstop_hits |= Y_LOW_HIT;
+        
 #if Y_ENDSTOP_INVERTING
 	if(!dir && !digitalRead(Y_MIN_PIN) )
         {
@@ -253,11 +289,21 @@ inline bool cartesian_dda::yCanStep(long current, long target, bool dir)
 		return false;
         }
 #endif
+
+        // clear the low hit bit
+        
+        endstop_hits &= ~Y_LOW_HIT;
+        
 #endif
 
 //stop us if we're at max and still going higher
 
 #if ENDSTOPS_MAX_ENABLED == 1
+
+        // Set the high hit bit
+        
+        endstop_hits |= Y_HIGH_HIT;
+        
 #if Y_ENDSTOP_INVERTING
 	if(dir && !digitalRead(Y_MAX_PIN) )
 		return false;
@@ -265,6 +311,11 @@ inline bool cartesian_dda::yCanStep(long current, long target, bool dir)
 	if(!dir && digitalRead(Y_MAX_PIN) )
 		return false;
 #endif
+
+        // Clear the high hit bit
+        
+        endstop_hits &= ~Y_HIGH_HIT;
+        
 #endif
 
 // All OK - we can step
@@ -274,6 +325,11 @@ inline bool cartesian_dda::yCanStep(long current, long target, bool dir)
 
 inline bool cartesian_dda::zCanStep(long current, long target, bool dir)
 {
+  
+          // clear the hit bits
+        
+        endstop_hits &= (~Z_LOW_HIT & ~Z_HIGH_HIT);
+        
 //stop us if we're on target
 
 	if (target == current)
@@ -282,6 +338,11 @@ inline bool cartesian_dda::zCanStep(long current, long target, bool dir)
 //stop us if we're home and still going lower
 
 #if ENDSTOPS_MIN_ENABLED == 1
+
+        // Set the low hit bit
+        
+        endstop_hits |= Z_LOW_HIT;
+        
 #if Z_ENDSTOP_INVERTING
 	if(!dir && !digitalRead(Z_MIN_PIN) )
         {
@@ -295,11 +356,21 @@ inline bool cartesian_dda::zCanStep(long current, long target, bool dir)
 		return false;
         }
 #endif
+
+        // clear the low hit bit
+        
+        endstop_hits &= ~Z_LOW_HIT;
+        
 #endif
 
 //stop us if we're at max and still going higher
 
 #if ENDSTOPS_MAX_ENABLED == 1
+
+        // Set the high hit bit
+        
+        endstop_hits |= Z_HIGH_HIT;
+        
 #if Z_ENDSTOP_INVERTING
 	if(dir && !digitalRead(Z_MAX_PIN) )
 		return false;
@@ -307,12 +378,18 @@ inline bool cartesian_dda::zCanStep(long current, long target, bool dir)
 	if(!dir && digitalRead(Z_MAX_PIN) )
 		return false;
 #endif
+
+        // Clear the high hit bit
+        
+        endstop_hits &= ~Z_HIGH_HIT;
+        
 #endif
 
 // All OK - we can step
   
 	return true;
 }
+
 
 inline bool cartesian_dda::eCanStep(long current, long target, bool dir)
 {

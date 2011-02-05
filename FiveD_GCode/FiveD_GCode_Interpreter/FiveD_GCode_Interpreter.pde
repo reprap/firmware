@@ -151,7 +151,9 @@ FloatPoint where_i_am;
 
 LongPoint zeroHit;
 
+// And what we hit
 
+volatile byte endstop_hits;
 
 // Our interrupt function
 
@@ -188,6 +190,7 @@ ISR(TIMER1_COMPA_vect)
 void setup()
 {
   nonest = false;
+  endstop_hits = 0;
   disableTimerInterrupt();
   setupTimerInterrupt();
   interruptBlink = 0;

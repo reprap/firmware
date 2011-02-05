@@ -209,6 +209,19 @@
 // What delay() value to use when waiting for things to free up in milliseconds
 #define WAITING_DELAY 1 // *RO
 
+// Bit flags for hit endstops
+
+#define X_LOW_HIT 1
+#define Y_LOW_HIT 2
+#define Z_LOW_HIT 4
+#define X_HIGH_HIT 8
+#define Y_HIGH_HIT 16
+#define Z_HIGH_HIT 32
+
+// Not sure if this is the best place for...
+
+extern volatile byte endstop_hits;
+
 #endif
 
 
