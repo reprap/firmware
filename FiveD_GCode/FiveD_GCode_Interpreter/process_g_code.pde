@@ -475,12 +475,14 @@ void process_string(char instruction[], int size)
                     
                   waitFor_qEmpty(); //while(!qEmpty()) delay(WAITING_DELAY);
                   //delay(2*WAITING_DELAY); // For luck
+                  long endTime;
 		  switch (gc.G)
 		  {
 
   			 //Dwell
 			case 4:
-				delay((int)(gc.P + 0.5));  
+                                endTime = millis() + (int)(gc.P + 0.5);
+				while(millis() < endTime) manage();  
 				break;
 
 			//Inches for Units
