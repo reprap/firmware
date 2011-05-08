@@ -72,10 +72,12 @@ float x_steps_per_unit = 91.42;
 float y_steps_per_unit = 91.42;
 float z_steps_per_unit = 5028.6;
 float e_steps_per_unit = 30;
-float max_feedrate = 200000; //mmm, acceleration!
 
 #ifdef REPRAP_ACC
 float f_steps_per_unit = 1;
+float max_feedrate = 4000;
+#else
+float max_feedrate = 200000; //mmm, acceleration!
 #endif
 
 //float x_steps_per_unit = 10.047;

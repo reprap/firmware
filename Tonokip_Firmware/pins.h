@@ -392,7 +392,7 @@ stepper-enable D4        PB4
 #define X_DIR_PIN          21
 #define X_ENABLE_PIN       4
 #define X_MIN_PIN          18
-#define X_MAX_PIN           -2 //2
+#define X_MAX_PIN          -1 //2
 
 #define Y_STEP_PIN         22
 #define Y_DIR_PIN          23

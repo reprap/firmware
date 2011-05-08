@@ -116,7 +116,7 @@ boolean acceleration_enabled,accelerating;
 float destination_x =0.0, destination_y = 0.0, destination_z = 0.0, destination_e = 0.0;
 float current_x = 0.0, current_y = 0.0, current_z = 0.0, current_e = 0.0;
 long x_interval, y_interval, z_interval, e_interval; // for speed delay
-float feedrate = 1500, next_feedrate, saved_feedrate;
+float feedrate = 1500, next_feedrate, saved_feedrate, current_feedrate=1500;
 float time_for_move;
 long gcode_N, gcode_LastN;
 bool relative_mode = false;  //Determines Absolute or Relative Coordinates
@@ -125,8 +125,6 @@ long timediff=0;
 #ifdef STEP_DELAY_RATIO
 long long_step_delay_ratio = STEP_DELAY_RATIO * 100;
 #endif
-
-float current_feedrate;
 
 
 // comm variables
@@ -490,64 +488,62 @@ inline void current_to_dest()
 #endif
 }
 
-
-
 inline void home_x()
 {
-  saved_feedrate = feedrate;
-  feedrate = 1500;
-  current_to_dest();
-  destination_x = -2*X_MAX_LENGTH;
-  setup_move();
-#ifdef REPRAP_ACC
-  linear_move();
-#else
-  linear_move(x_steps_to_take, y_steps_to_take, z_steps_to_take, e_steps_to_take); // make the move
-#endif
-  previous_millis_cmd = millis(); 
-  current_x = 0;
-  feedrate = saved_feedrate;
+  	saved_feedrate = current_feedrate;
+  	current_feedrate = 1500.0;
+  	current_to_dest();
+  	destination_x = -2.0*X_MAX_LENGTH;
+  	setup_move();
+  	#ifdef REPRAP_ACC
+  	 linear_move();
+  	#else
+  	 linear_move(x_steps_to_take, y_steps_to_take, z_steps_to_take, e_steps_to_take); // make the move
+  	#endif
+  	current_x = 0;
+  	current_feedrate = saved_feedrate;
 }
-
+  	
 inline void home_y()
 {
-  saved_feedrate = feedrate;
-  feedrate = 1500;
-  current_to_dest();
-  destination_y = -2*Y_MAX_LENGTH;
-  setup_move();
-#ifdef REPRAP_ACC
-  linear_move();
-#else
-  linear_move(x_steps_to_take, y_steps_to_take, z_steps_to_take, e_steps_to_take); // make the move
-#endif
-  previous_millis_cmd = millis();
-  current_y = 0;
-  feedrate = saved_feedrate;  
+  	saved_feedrate = current_feedrate;
+  	current_feedrate = 1500.0;
+  	current_to_dest();
+  	destination_y = -2.0*Y_MAX_LENGTH;
+  	setup_move();
+  	#ifdef REPRAP_ACC
+  	 linear_move();
+  	#else
+  	 linear_move(x_steps_to_take, y_steps_to_take, z_steps_to_take, e_steps_to_take); // make the move
+  	#endif
+  	current_y = 0;
+  	current_feedrate = saved_feedrate;
 }
-
+ 	
 inline void home_z()
 {
-  saved_feedrate = feedrate;
-  feedrate = 50;
-  current_to_dest();
-  destination_z = -2*Z_MAX_LENGTH;
-  setup_move();
-#ifdef REPRAP_ACC
-  linear_move();
-#else
-  linear_move(x_steps_to_take, y_steps_to_take, z_steps_to_take, e_steps_to_take); // make the move
-#endif
-  previous_millis_cmd = millis();
-  current_z = 0;
-  feedrate = saved_feedrate;    
-}
+  	saved_feedrate = current_feedrate;
+  	current_feedrate = 100.0;
+  	current_to_dest();
+  	destination_z = -2.0*Z_MAX_LENGTH;
+  	setup_move();
+  	#ifdef REPRAP_ACC
+  	 linear_move();
+  	#else
+  	 linear_move(x_steps_to_take, y_steps_to_take, z_steps_to_take, e_steps_to_take); // make the move
+  	#endif  	
+  	current_z = 0;
+  	current_feedrate = saved_feedrate;
+ }
+  	
+
+
 
 inline void process_commands()
 {
   unsigned long codenum; //throw away variable
   char *starpos=NULL;
-  bool done;
+  boolean done;
   if(code_seen('G'))
   {
     switch((int)code_value())
@@ -576,27 +572,28 @@ inline void process_commands()
         break;
       case 28: // Home axis or axes
         done = false;
-        if(code_seen('X'))
-        {
-          home_x();
-          done = true;
-        }
-        if(code_seen('Y'))
-        {
-          home_y();
-          done = true;
-        }
-        if(code_seen('Z'))
-        {
-          home_z();
-          done = true;
-        }
-        if(!done)
-        {
-          home_x();
-          home_y();
-          home_z();
-        }
+  	if(code_seen('X'))
+  	{
+  	  home_x();
+  	  done = true;
+  	}
+  	if(code_seen('Y'))
+  	{
+  	  home_y();
+  	  done = true;
+  	}
+  	if(code_seen('Z'))
+  	{
+  	  home_z();
+  	  done = true;
+  	}
+  	if(!done)
+  	{
+  	  home_x();
+  	  home_y();
+  	  home_z();
+  	}
+        previous_millis_cmd = millis();
         break;  
       case 90: // G90
         relative_mode = false;
@@ -780,8 +777,8 @@ inline void process_commands()
           if( (millis()-previous_millis_heater) > 1000 ) //Print Temp Reading every 1 second while heating up.
           {
             tt=analog2temp(current_raw);
-            Serial.print("T:");
-            Serial.println( tt );
+            //Serial.print("T:");
+            //Serial.println( tt );
             Serial.print("ok T:");
             Serial.print( tt ); 
             Serial.print(" B:");
@@ -850,7 +847,7 @@ inline void process_commands()
         Serial.print(current_z);
 	Serial.print(" E:");
         Serial.println(current_e);
-        break;
+        return;
     }
     
   }
@@ -1232,24 +1229,36 @@ inline void manage_inactivity(byte debug) { if( (millis()-previous_millis_cmd) >
 bool nullmove, real_move;
 bool direction_f;
 bool x_can_step, y_can_step, z_can_step, e_can_step, f_can_step;
-unsigned long total_steps, t_scale;
+long total_steps, t_scale;
 long dda_counter_x, dda_counter_y, dda_counter_z, dda_counter_e, dda_counter_f;
 long current_steps_x, current_steps_y, current_steps_z, current_steps_e, current_steps_f;
 long target_steps_x, target_steps_y, target_steps_z, target_steps_e, target_steps_f;
 long delta_steps_x, delta_steps_y, delta_steps_z, delta_steps_e, delta_steps_f;	
 float position, target, diff, distance;
-unsigned long integer_distance;
-unsigned long step_time, time_increment;
+long integer_distance;
+long step_time, time_increment;
 
-inline unsigned long calculate_feedrate_delay(const unsigned long& feedrate_now)
+/*
+
+Calculate delay between steps in microseconds.  Here it is in English:
+
+60000000.0*distance/feedrate_now  = move duration in microseconds
+move duration/total_steps = time between steps for master axis.
+
+feedrate_now is in mm/minute, 
+distance is in mm, 
+integer_distance is 3000000.0*distance
+
+To prevent long overflow, we work in increments of 20 microseconds; hence 
+the 3,000,000 rather than 60,000,000.
+*/
+
+#define DISTANCE_MULTIPLIER 3000000.0
+#define MICRO_RES 20
+
+inline long calculate_feedrate_delay(const long& feedrate_now)
 {  
-	// Calculate delay between steps in microseconds.  Here it is in English:
-        // (feedrate_now is in mm/minute, distance is in mm, integer_distance is 60000000.0*distance)
-	// 60000000.0*distance/feedrate_now  = move duration in microseconds
-	// move duration/total_steps = time between steps for master axis.
-
-	//return integer_distance/(feedrate_now*total_steps);
-return 500;	
+  return MICRO_RES*(integer_distance/(feedrate_now*total_steps));	
 }
 
 inline void do_x_step()
@@ -1276,8 +1285,42 @@ inline void do_e_step()
   digitalWrite(E_STEP_PIN, LOW);
 }
 
+#define ALWAYS_UPDATE 1
+#define CONDITIONAL_UPDATE 2
+#define NEVER_UPDATE 3
+
+inline void coord_to_steps(const float& current, const float& destination, long& current_steps, const long& steps_per_unit,
+              long& target_steps, long& delta_steps, bool& dir, unsigned char dist_check)
+{
+  position = current;
+  current_steps = lround(position*steps_per_unit);
+  target = destination;
+  target_steps = lround(target*steps_per_unit);
+  delta_steps = target_steps - current_steps;
+  if(delta_steps >= 0) dir = 1;
+  else
+  {
+     dir = 0;
+     delta_steps = -delta_steps;
+  }
+  switch(dist_check)
+  {
+    case CONDITIONAL_UPDATE:
+          if(distance > SMALL_DISTANCE2)
+            return;
+    case ALWAYS_UPDATE:
+          diff = target - position;
+          distance += diff*diff;
+          break;
+    case NEVER_UPDATE:
+    default:
+          break;
+  }
+}
+
 inline void setup_move()
 {
+
   if(feedrate > max_feedrate) feedrate = max_feedrate;
   if(feedrate<10) feedrate=10; 
   
@@ -1297,86 +1340,29 @@ inline void setup_move()
   
   nullmove = false;
   
-  position = current_x;
-  current_steps_x = round(position*x_steps_per_unit);
-  target = destination_x;
-  target_steps_x = round(target*x_steps_per_unit);
-  delta_steps_x = target_steps_x - current_steps_x;
-  if(delta_steps_x >= 0) direction_x = 1;
-  else
-  {
-     direction_x = 0;
-     delta_steps_x = -delta_steps_x;
-  }
-  diff = target - position;
-  distance = diff*diff;
-  
-  position = current_y;
-  current_steps_y = round(position*y_steps_per_unit);
-  target = destination_y;
-  target_steps_y = round(target*y_steps_per_unit);
-  delta_steps_y = target_steps_y - current_steps_y;
-  if(delta_steps_y >= 0) direction_y = 1;
-  else
-  {
-     direction_y = 0;
-     delta_steps_y = -delta_steps_y;
-  }
-  diff = target - position;
-  distance += diff*diff;
- 
-  position = current_z;
-  current_steps_z = round(position*z_steps_per_unit);
-  target = destination_z;
-  target_steps_z = round(target*z_steps_per_unit);
-  delta_steps_z = target_steps_z - current_steps_z;
-  if(delta_steps_z >= 0) direction_z = 1;
-  else
-  {
-     direction_z = 0;
-     delta_steps_z = -delta_steps_z;
-  }
-  diff = target - position;
-  distance += diff*diff;
-  
-  position = current_e;
-  current_steps_e = round(position*e_steps_per_unit);
-  target = destination_e;
-  target_steps_e = round(target*e_steps_per_unit);
-  delta_steps_e = target_steps_e - current_steps_e;
-  if(delta_steps_e >= 0) direction_e = 1;
-  else
-  {
-     direction_e = 0;
-     delta_steps_e = -delta_steps_e;
-  }
-  if(distance < SMALL_DISTANCE2) // Only consider E if it's the only thing that's moving
-  {
-    diff = target - position;
-    distance += diff*diff;
-  } 
- 
+  distance = 0.0;
+
+  coord_to_steps(current_x, destination_x, current_steps_x, x_steps_per_unit,
+              target_steps_x, delta_steps_x, direction_x, ALWAYS_UPDATE);
+  coord_to_steps(current_y, destination_y, current_steps_y, y_steps_per_unit,
+              target_steps_y, delta_steps_y, direction_y, ALWAYS_UPDATE);
+  coord_to_steps(current_z, destination_z, current_steps_z, z_steps_per_unit,
+              target_steps_z, delta_steps_z, direction_z, ALWAYS_UPDATE);
+  coord_to_steps(current_e, destination_e, current_steps_e, e_steps_per_unit,
+              target_steps_e, delta_steps_e, direction_e, CONDITIONAL_UPDATE);              
+
   if(distance < SMALL_DISTANCE2) // If only F changes, do it in one shot
   {
     nullmove = true;
     current_feedrate = feedrate;
     return; 
   }    
-  
-  position = current_feedrate;
-  current_steps_f = round(position*f_steps_per_unit);
-  target = feedrate;
-  target_steps_f = round(target*f_steps_per_unit);
-  delta_steps_f = target_steps_f - current_steps_f;
-  if(delta_steps_f >= 0) direction_f = 1;
-  else
-  {
-     direction_f = 0;
-     delta_steps_f = -delta_steps_f;
-  }
  
+  coord_to_steps(current_feedrate, feedrate, current_steps_f, f_steps_per_unit,
+              target_steps_f, delta_steps_f, direction_f, NEVER_UPDATE);  
+
   distance = sqrt(distance); 
-  integer_distance = round(distance*60000000.0);  
+  integer_distance = lround(distance*DISTANCE_MULTIPLIER);  
                                                                                    		
   total_steps = max(delta_steps_x, delta_steps_y);
   total_steps = max(total_steps, delta_steps_z);
@@ -1392,7 +1378,7 @@ inline void setup_move()
   }    
   
   // Rescale the feedrate so it doesn't take lots of steps to do
-        
+    
   t_scale = 1;
   if(delta_steps_f > total_steps)
   {
@@ -1418,7 +1404,7 @@ inline void setup_move()
   dda_counter_f = dda_counter_x;
   
   time_increment = calculate_feedrate_delay(t_scale*current_steps_f);
-  
+
   if(delta_steps_x) enable_x();
   if(delta_steps_y) enable_y();
   if(delta_steps_z) enable_z();
@@ -1431,39 +1417,13 @@ inline void setup_move()
   if (direction_z) digitalWrite(Z_DIR_PIN,!INVERT_Z_DIR);
   else digitalWrite(Z_DIR_PIN,INVERT_Z_DIR);
   if (direction_e) digitalWrite(E_DIR_PIN,!INVERT_E_DIR);
-  else digitalWrite(E_DIR_PIN,INVERT_E_DIR);
-  	
-#if 0        
+  else digitalWrite(E_DIR_PIN,INVERT_E_DIR); 
 
-          Serial.print("destination_x: "); Serial.println(destination_x); 
-          Serial.print("current_x: "); Serial.println(current_x); 
-          Serial.print("x_steps_to_take: "); Serial.println(delta_steps_x); 
-          Serial.print("time increment: "); Serial.println(time_increment); 
-          Serial.print("total_steps: "); Serial.println(total_steps); 
-          Serial.println("");
-          Serial.print("destination_y: "); Serial.println(destination_y); 
-          Serial.print("current_y: "); Serial.println(current_y); 
-          Serial.print("y_steps_to_take: "); Serial.println(delta_steps_y); 
-          Serial.println("");
-          Serial.print("destination_z: "); Serial.println(destination_z); 
-          Serial.print("current_z: "); Serial.println(current_z); 
-          Serial.print("z_steps_to_take: "); Serial.println(delta_steps_z); 
-          Serial.println("");
-          Serial.print("destination_e: "); Serial.println(destination_e); 
-          Serial.print("current_e: "); Serial.println(current_e); 
-          Serial.print("e_steps_to_take: "); Serial.println(delta_steps_e); 
-          Serial.println("");
-          Serial.print("destination_f: "); Serial.println(feedrate); 
-          Serial.print("current_f: "); Serial.println(current_feedrate); 
-          Serial.print("f_steps_to_take: "); Serial.println(delta_steps_f); 
-          Serial.println("");
-#endif 
-  
 }
 
-inline bool can_step_switch(const long& current, const long& target, bool direction, byte minstop, byte maxstop)
+inline bool can_step_switch(const long& here, const long& there, bool direction, int minstop, int maxstop)
 {
-  if(current == target)
+  if(here == there)
     return false;
   
   if(direction)
@@ -1479,9 +1439,9 @@ inline bool can_step_switch(const long& current, const long& target, bool direct
   return true;
 }
 
-inline bool can_step(const long& current, const long& target)
+inline bool can_step(const long& here, const long& there)
 {
-   return current != target;
+   return here != there;
 }
 
 void linear_move() // make linear move with preset speeds and destinations, see G0 and G1
@@ -1493,7 +1453,7 @@ void linear_move() // make linear move with preset speeds and destinations, see 
    }
    
   step_time = micros();
-   
+ 
   do
   {
       while(step_time > micros())
@@ -1599,18 +1559,29 @@ void linear_move() // make linear move with preset speeds and destinations, see 
 		}
                   
                 if(real_move) // If only F has changed, no point in delaying 
-                  step_time += time_increment;
+                  step_time += time_increment; 
                   
   } while (x_can_step || y_can_step || z_can_step  || e_can_step || f_can_step);
   
+
   if(DISABLE_X) disable_x();
   if(DISABLE_Y) disable_y();
   if(DISABLE_Z) disable_z();
   if(DISABLE_E) disable_e();
 
-  current_x = destination_x;
-  current_y = destination_y;
-  current_z = destination_z;
+  if(digitalRead(X_MIN_PIN) != ENDSTOPS_INVERTING)
+    current_x = 0.0;
+  else
+    current_x = destination_x;
+  if(digitalRead(Y_MIN_PIN) != ENDSTOPS_INVERTING)
+    current_y = 0.0;
+  else
+    current_y = destination_y;
+  if(digitalRead(Z_MIN_PIN) != ENDSTOPS_INVERTING)
+    current_z = 0.0;
+  else
+    current_z = destination_z;    
+
   current_e = destination_e;
   current_feedrate = feedrate;
 
