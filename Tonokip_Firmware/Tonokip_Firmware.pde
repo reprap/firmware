@@ -493,7 +493,10 @@ inline void home_x()
   	saved_feedrate = current_feedrate;
   	current_feedrate = 1500.0;
   	current_to_dest();
-  	destination_x = -2.0*X_MAX_LENGTH;
+        if(X_MIN_PIN >= 0)
+  	  destination_x = -2.0*X_MAX_LENGTH;
+        else
+          destination_x = 0.0; // Best we can do
   	setup_move();
   	#ifdef REPRAP_ACC
   	 linear_move();
@@ -509,7 +512,10 @@ inline void home_y()
   	saved_feedrate = current_feedrate;
   	current_feedrate = 1500.0;
   	current_to_dest();
-  	destination_y = -2.0*Y_MAX_LENGTH;
+        if(Y_MIN_PIN >= 0)
+  	  destination_y = -2.0*Y_MAX_LENGTH;
+        else
+          destination_y = 0.0; // Best we can do
   	setup_move();
   	#ifdef REPRAP_ACC
   	 linear_move();
@@ -525,7 +531,10 @@ inline void home_z()
   	saved_feedrate = current_feedrate;
   	current_feedrate = 100.0;
   	current_to_dest();
-  	destination_z = -2.0*Z_MAX_LENGTH;
+        if(Z_MIN_PIN >= 0)
+  	  destination_z = -2.0*Z_MAX_LENGTH;
+        else
+          destination_z = 0.0; // Best we can do
   	setup_move();
   	#ifdef REPRAP_ACC
   	 linear_move();
