@@ -1,5 +1,5 @@
-#ifndef THERMISTORTABLE_H_
-#define THERMISTORTABLE_H_
+#ifndef BEDTHERMISTORTABLE_100K_H
+#define BEDTHERMISTORTABLE_100K_H_
 
 // Thermistor lookup table for RepRap Temperature Sensor Boards (http://make.rrrf.org/ts)
 // See this page:  

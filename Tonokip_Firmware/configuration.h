@@ -3,7 +3,7 @@
 
 // NO RS485/EXTRUDER CONTROLLER SUPPORT
 // PLEASE VERIFY PIN ASSIGNMENTS FOR YOUR CONFIGURATION!!!!!!!
-#define MOTHERBOARD 6 // ATMEGA168 = 0, SANGUINO = 1, MOTHERBOARD = 2, MEGA/RAMPS = 3, ATMEGA328 = 4, Gen6 = 5, Sanguinololu = 6
+#define MOTHERBOARD 3 // ATMEGA168 = 0, SANGUINO = 1, MOTHERBOARD = 2, MEGA/RAMPS = 3, ATMEGA328 = 4, Gen6 = 5, Sanguinololu = 6
 
 //Comment out to disable SD support
 //#define SDSUPPORT 1
@@ -68,14 +68,14 @@ float min_constant_speed_units = 2; // the minimum units of an accelerated move 
 // units are in millimeters or whatever length unit you prefer: inches,football-fields,parsecs etc
 
 //Calibration variables
-float x_steps_per_unit = 91.42;
-float y_steps_per_unit = 91.42;
-float z_steps_per_unit = 5028.6;
-float e_steps_per_unit = 30;
+float x_steps_per_unit = 80;
+float y_steps_per_unit = 80;
+float z_steps_per_unit = 6667.184;
+float e_steps_per_unit = 48;
 
 #ifdef REPRAP_ACC
 float f_steps_per_unit = 1;
-float max_feedrate = 4000;
+float max_feedrate = 12000;
 #else
 float max_feedrate = 200000; //mmm, acceleration!
 #endif
@@ -100,13 +100,16 @@ const bool DISABLE_E = false;
 
 const bool INVERT_X_DIR = false;
 const bool INVERT_Y_DIR = false;
-const bool INVERT_Z_DIR = false;
+const bool INVERT_Z_DIR = true;
 const bool INVERT_E_DIR = false;
 
 //Thermistor settings:
+//Uncomment for 10k thermistor
+#include "BedThermistorTable_100k.h"
 
+//Thermistor settings:
 //Uncomment for 100k thermistor
-//#include "ThermistorTable_100k.h"
+#include "ThermistorTable_100k.h"
 //#include "BedThermistorTable_100k.h"
 
 //Uncomment for 200k thermistor
@@ -114,11 +117,11 @@ const bool INVERT_E_DIR = false;
 //#include "BedThermistorTable_200k.h"
 
 //Identical thermistors on heater and bed - use this if you have no heated bed or if the thermistors are the same on both:
-#include "ThermistorTable_200k.h"
+//#include "ThermistorTable_200k.h"
 //#include "ThermistorTable_100k.h"
 //#include "ThermistorTable_mendelparts.h"
-#define BNUMTEMPS NUMTEMPS
-#define bedtemptable temptable
+//#define BNUMTEMPS NUMTEMPS
+//#define bedtemptable temptable
 
 //Endstop Settings
 #define ENDSTOPPULLUPS 1

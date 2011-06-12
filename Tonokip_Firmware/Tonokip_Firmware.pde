@@ -491,7 +491,7 @@ inline void current_to_dest()
 inline void home_x()
 {
   	saved_feedrate = current_feedrate;
-  	current_feedrate = 1500.0;
+  	current_feedrate = 2500.0;
   	current_to_dest();
         if(X_MIN_PIN >= 0)
   	  destination_x = -2.0*X_MAX_LENGTH;
@@ -510,7 +510,7 @@ inline void home_x()
 inline void home_y()
 {
   	saved_feedrate = current_feedrate;
-  	current_feedrate = 1500.0;
+  	current_feedrate = 2500.0;
   	current_to_dest();
         if(Y_MIN_PIN >= 0)
   	  destination_y = -2.0*Y_MAX_LENGTH;
@@ -529,7 +529,7 @@ inline void home_y()
 inline void home_z()
 {
   	saved_feedrate = current_feedrate;
-  	current_feedrate = 100.0;
+  	current_feedrate = 50.0;
   	current_to_dest();
         if(Z_MIN_PIN >= 0)
   	  destination_z = -2.0*Z_MAX_LENGTH;
