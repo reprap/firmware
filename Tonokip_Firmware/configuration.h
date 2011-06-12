@@ -105,7 +105,7 @@ const bool INVERT_E_DIR = false;
 
 //Thermistor settings:
 //Uncomment for 10k thermistor
-#include "BedThermistorTable_100k.h"
+#include "BedThermistorTable_10k.h"
 
 //Thermistor settings:
 //Uncomment for 100k thermistor
