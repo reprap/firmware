@@ -51,6 +51,7 @@ public:
    
    void shutdown();
    float stepsPerMM();
+
       
 private:
 
@@ -63,7 +64,7 @@ private:
     byte heater_current;
     int extrude_step_count;
     float sPerMM;
-    
+    float savedLength;
     int targetTemperature;
 
 // These are used for temperature control    
@@ -88,6 +89,17 @@ private:
      int sampleTemperature();
    
 };
+
+inline void extruder::setLength(const float& l)
+{
+  savedLength = l;
+}
+
+inline float extruder::getLength()
+{
+  return savedLength;
+}
+
 
 inline int extruder::getTarget()
 {
@@ -196,7 +208,7 @@ private:
    char* reply;
    bool stp;
    float sPerMM;
-
+   float savedLength;
    void buildCommand(char c);   
    void buildCommand(char c, char v);
    void buildNumberCommand(char c, int v);
@@ -383,7 +395,12 @@ class extruder
 {
   
 public:
+#if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL
+   extruder(PIDcontrol* pid, byte step, byte dir, byte en, byte heat, byte temp, float spm);
+#else
    extruder(byte step, byte dir, byte en, byte heat, byte temp, float spm);
+#endif
+   
    void waitForTemperature();
    
    void setDirection(bool direction);
@@ -400,7 +417,9 @@ public:
    float stepsPerMM();
    void controlTemperature();   
    void valveSet(bool open, int dTime); 
- 
+   void setLength(const float& l);
+   float getLength();
+   
 private:
 
 //   int targetTemperature;
@@ -408,7 +427,7 @@ private:
    int oldT, newT;
    float sPerMM;
    long manageCount;
-   
+   float savedLength;
    PIDcontrol* extruderPID;    // Temperature control - extruder...
    
    int sampleTemperature();
@@ -427,6 +446,16 @@ private:
     
  
 };
+
+inline void extruder::setLength(const float& l)
+{
+  savedLength = l;
+}
+
+inline float extruder::getLength()
+{
+  return savedLength;
+}
 
 inline void extruder::sStep()
 {

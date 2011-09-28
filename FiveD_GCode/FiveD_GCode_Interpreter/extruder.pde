@@ -17,8 +17,10 @@ void newExtruder(byte e)
     return;
 
   if(e != extruder_in_use)
-  {  
+  {
+    ex[extruder_in_use]->setLength(where_i_am.e);
     extruder_in_use = e;
+    where_i_am.e = ex[extruder_in_use]->getLength();
     setUnits(cdda[0]->get_units());
   }
 }
@@ -292,14 +294,13 @@ void extruder::manage()
  */
 #if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_INTERNAL
 
-static PIDcontrol ePID(EXTRUDER_0_HEATER_PIN, EXTRUDER_0_TEMPERATURE_PIN, false);
 
 
 //*******************************************************************************************
 
 // Motherboard 3 - Arduino Mega
 
-extruder::extruder(byte stp, byte dir, byte en, byte heat, byte temp, float spm)
+extruder::extruder(PIDcontrol* pid, byte stp, byte dir, byte en, byte heat, byte temp, float spm)
 {
   motor_step_pin = stp;
   motor_dir_pin = dir;
@@ -308,7 +309,7 @@ extruder::extruder(byte stp, byte dir, byte en, byte heat, byte temp, float spm)
   temp_pin = temp;
   sPerMM = spm;
   manageCount = 0;
-  extruderPID = &ePID;
+  extruderPID = pid;
   
   //fan_pin = ;
 
