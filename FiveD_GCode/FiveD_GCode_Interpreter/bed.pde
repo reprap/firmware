@@ -39,6 +39,7 @@ void bed::controlTemperature()
 void bed::waitForTemperature()
 {
   byte seconds = 0;
+  unsigned long endTime;
   bool warming = true;
   count = 0;
   newT = 0;
@@ -77,8 +78,8 @@ void bed::waitForTemperature()
     }
     for(int i = 0; i < 1000; i++)
     {
-      manage();
-      delay(1);
+      endTime = millis() + 1;
+      while(millis() < endTime) manage();
     }
   }
 }

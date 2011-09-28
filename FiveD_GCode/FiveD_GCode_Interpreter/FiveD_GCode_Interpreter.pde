@@ -58,6 +58,7 @@ http://objects.reprap.org/wiki/Mendel_User_Manual:_RepRapGCodes
 // Sanguino v1.6 by Adrian Bowyer - implemented RS485 extruders
 // Arduino Mega v1.7 by Adrian Bowyer
 // Features code v1.8 by David Bussenschutt July 2010
+// Tidying by Adrian September 2011
 
 // Maintain a list of extruders...
 
@@ -234,7 +235,8 @@ void setup()
 #ifdef PS_ON_PIN 
     pinMode(PS_ON_PIN, OUTPUT);  // add to run G3 as built by makerbot
     digitalWrite(PS_ON_PIN, LOW);   // ditto
-    delay(2000);    
+    unsigned long endTime = millis() + 2000;
+      while(millis() < endTime) manage();    
 #endif
 #if EXTRUDER_CONTROLLER == EXTRUDER_CONTROLLER_RS485
 rs485Interface.begin(RS485_BAUD);  
@@ -279,8 +281,6 @@ void shutdown()
   heatedBed.shutdown();
 #endif
 
-//  int a=50;
-//  while(a--) {blink(); delay(50);}
   
   // LED off
   
@@ -357,7 +357,8 @@ void validate_hardware() {
         talkToHost.informational("// Y-endstop-pin-raw-reading (Y_MIN_PIN): ");talkToHost.informational(int2str(digitalRead(Y_MIN_PIN)));
         talkToHost.informational("// Z-endstop-pin-raw-reading (Z_MIN_PIN): ");talkToHost.informational(int2str(digitalRead(Z_MIN_PIN)));
         
-        delay(1000);
+        unsigned long endTime = millis() + 1000;
+        while(millis() < endTime) manage();
         ex[extruder_in_use]->manage();
         int t = ex[extruder_in_use]->getTemperature();
         talkToHost.informational("temp is ");

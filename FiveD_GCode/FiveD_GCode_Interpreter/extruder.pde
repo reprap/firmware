@@ -87,8 +87,8 @@ void extruder::waitForTemperature()
     }
     for(int i = 0; i < 1000; i++)
     {
-      manage();
-      delay(1);
+      unsigned long endTime = millis() + 1;
+      while(millis() < endTime) manage();
     }
   }
 }
@@ -186,7 +186,8 @@ void extruder::valveSet(bool open, int dTime)
   valve_open = open;
   digitalWrite(valve_dir_pin, open);
   digitalWrite(valve_en_pin, 1);
-  delay(dTime);
+  unsigned long endTime = millis() + dTime;
+  while(millis() < endTime) manage();
   digitalWrite(valve_en_pin, 0);
 }
 

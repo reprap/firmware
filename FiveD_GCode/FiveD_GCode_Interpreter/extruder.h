@@ -258,7 +258,8 @@ inline  void extruder::valveSet(bool open, int dTime)
      buildCommand(VALVE, '0');
    talker.sendPacketAndCheckAcknowledgement(my_name, commandBuffer);
    
-   delay(dTime);
+   unsigned long endTime = millis() + dTime;
+      while(millis() < endTime) manage();
 }
 
 inline  void extruder::setCooler(byte e_speed)

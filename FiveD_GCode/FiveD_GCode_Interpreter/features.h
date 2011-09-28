@@ -206,7 +206,7 @@
 // is happening
 #define DEFAULT_TICK (long)1000 // *RO
 
-// What delay() value to use when waiting for things to free up in milliseconds
+// What delay value to use when waiting for things to free up in milliseconds
 #define WAITING_DELAY 1 // *RO
 
 // Bit flags for hit endstops

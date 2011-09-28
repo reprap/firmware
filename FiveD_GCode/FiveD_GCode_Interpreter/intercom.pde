@@ -358,7 +358,10 @@ bool intercom::sendPacketAndCheckAcknowledgement(char to, char* string)
       ok = waitForPacket();
     ok = ok && checkChecksum(inBuffer);
     if(!ok)
-     delay(2*TIMEOUT);  // Wait twice timeout, and everything should have reset itself
+    {
+      unsigned long endTime = millis() + 2*TIMEOUT;
+        while(millis() < endTime) manage();  
+    }
     retries++;   
   }
   return ok; 

@@ -134,7 +134,7 @@ void zeroX()
  
   // Wait for movements to finish, then check we hit the stop
  
-  while(!qEmpty()) delay(WAITING_DELAY);
+  while(!qEmpty()) manage();
   if(!(endstop_hits & X_LOW_HIT))
   {
     sprintf(talkToHost.string(), "X endstop not hit - hard fault.");
@@ -154,7 +154,7 @@ void zeroY()
  
   // Wait for movements to finish, then check we hit the stop
   
-  while(!qEmpty()) delay(WAITING_DELAY);
+  while(!qEmpty()) manage();
   if(!(endstop_hits & Y_LOW_HIT))
   {
     sprintf(talkToHost.string(), "Y endstop not hit - hard fault.");
@@ -176,7 +176,7 @@ void zeroZ()
   
   // Wait for movements to finish, then check we hit the stop
 
-  while(!qEmpty()) delay(WAITING_DELAY);
+  while(!qEmpty()) manage();
   if(!(endstop_hits & Z_LOW_HIT))
   {
     sprintf(talkToHost.string(), "Z endstop not hit - hard fault.");
@@ -473,8 +473,7 @@ void process_string(char instruction[], int size)
 		// Non-buffered G commands
                 // Wait till the buffer q is empty first
                     
-                  waitFor_qEmpty(); //while(!qEmpty()) delay(WAITING_DELAY);
-                  //delay(2*WAITING_DELAY); // For luck
+                  waitFor_qEmpty();
                   long endTime;
 		  switch (gc.G)
 		  {
@@ -524,8 +523,7 @@ void process_string(char instruction[], int size)
 	if (gc.seen & GCODE_M)
 	{
             // Wait till the q is empty first
-            waitFor_qEmpty(); //while(!qEmpty()) delay(WAITING_DELAY);
-            //delay(2*WAITING_DELAY);
+            waitFor_qEmpty();
 		switch (gc.M)
 		{
 			
@@ -697,8 +695,7 @@ void process_string(char instruction[], int size)
                 
         if (gc.seen & GCODE_T)
         {
-            waitFor_qEmpty(); //while(!qEmpty()) delay(WAITING_DELAY);
-            //delay(2*WAITING_DELAY);
+            waitFor_qEmpty();
             newExtruder(gc.T);
         }
 }
