@@ -146,10 +146,10 @@
  #define TEMP_SENSOR_RRRF100K_THERMISTOR 3  //see: http://reprap.org/wiki/Thermistor
  #define TEMP_SENSOR_RRRF10K_THERMISTOR 4  //see: http://reprap.org/wiki/Thermistor
  #define TEMP_SENSOR_RS10K_THERMISTOR 5  //see: http://reprap.org/wiki/Thermistor
- #define TEMP_SENSOR_RS100K_THERMISTOR TEMP_SENSOR_EPCOS540_THERMISTOR  // different names for the same thing.
- #define TEMP_SENSOR_AD595_THERMOCOUPLE  6 // see: http://reprap.org/wiki/Thermocouple_Sensor_1.0
- #define TEMP_SENSOR_MAX6675_THERMOCOUPLE 7 // see: http://reprap.org/wiki/Hacks_to_the_RepRap_Extruder_Controller_v2.2
- #define TEMP_JAYCAR_NTC_125DEG_10K_THERMISTOR 8 // see: http://www.jaycar.com.au/productView.asp?ID=RN3440&keywords=thermistor&form=KEYWORD
+ #define TEMP_SENSOR_RS100K_THERMISTOR 6 // different names for the same thing.
+ #define TEMP_SENSOR_AD595_THERMOCOUPLE  7 // see: http://reprap.org/wiki/Thermocouple_Sensor_1.0
+ #define TEMP_SENSOR_MAX6675_THERMOCOUPLE 8 // see: http://reprap.org/wiki/Hacks_to_the_RepRap_Extruder_Controller_v2.2
+ #define TEMP_JAYCAR_NTC_125DEG_10K_THERMISTOR 9 // see: http://www.jaycar.com.au/productView.asp?ID=RN3440&keywords=thermistor&form=KEYWORD
 
 // #define DATA_SOURCE DATA_SOURCE_USB_SERIAL
 
