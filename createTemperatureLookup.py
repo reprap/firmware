@@ -17,7 +17,7 @@ Options:
   -h, --help			show this help
   --r0=... 			thermistor rating where # is the ohm rating of the thermistor at t0 (eg: 10K = 10000)
   --t0=... 			thermistor temp rating where # is the temperature in Celsuis to get r0 (from your datasheet)
-  --beta=...			thermistor beta rating. see http://reprap.org/bin/view/Main/MeasuringThermistorBeta
+  --beta=...			thermistor beta rating. see http://reprap.org/wiki/MeasuringThermistorBeta
   --r1=...			R1 rating where # is the ohm rating of R1 (eg: 10K = 10000)
   --r2=... 			R2 rating where # is the ohm rating of R2 (eg: 10K = 10000)
   --num-temps=... 	the number of temperature points to calculate (default: 20)
@@ -99,7 +99,7 @@ def main(argv):
 	first = 1
 
 	print "// Thermistor lookup table for RepRap Temperature Sensor Boards (http://make.rrrf.org/ts)"
-	print "// Made with createTemperatureLookup.py (http://svn.reprap.org/trunk/reprap/firmware/Arduino/utilities/createTemperatureLookup.py)"
+	print "// Made with createTemperatureLookup.py (https://github.com/reprap/firmware/blob/master/createTemperatureLookup.py)"
 	print "// ./createTemperatureLookup.py --r0=%s --t0=%s --r1=%s --r2=%s --beta=%s --max-adc=%s" % (r0, t0, r1, r2, beta, max_adc)
 	print "// r0: %s" % (r0)
 	print "// t0: %s" % (t0)
